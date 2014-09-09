@@ -3,5 +3,14 @@
           package="is.ru.app">
     <uses-sdk android:minSdkVersion="19"/>
     <application android:icon="@drawable/icon" android:label="@string/app_name">
+        <activity android:name="MainActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".PlayActivity"/>
+        <activity android:name=".ColorListActivity" android:label="Colors"/>
     </application>
 </manifest>
