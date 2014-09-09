@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_ruflow" default="compile.module.ruflow">
+  <dirname property="module.ruflow.basedir" file="${ant.file.module_ruflow}"/>
+  
+  <property name="module.jdk.home.ruflow" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.ruflow" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.ruflow" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.ruflow" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  
+  <property name="ruflow.output.dir" value="${module.ruflow.basedir}/out/production/RUflow"/>
+  <property name="ruflow.testoutput.dir" value="${module.ruflow.basedir}/out/test/RUflow"/>
+  
+  <path id="ruflow.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="ruflow.module.production.classpath">
+    <path refid="${module.jdk.classpath.ruflow}"/>
+  </path>
+  
+  <path id="ruflow.runtime.production.module.classpath">
+    <pathelement location="${ruflow.output.dir}"/>
+  </path>
+  
+  <path id="ruflow.module.classpath">
+    <path refid="${module.jdk.classpath.ruflow}"/>
+    <pathelement location="${ruflow.output.dir}"/>
+  </path>
+  
+  <path id="ruflow.runtime.module.classpath">
+    <pathelement location="${ruflow.testoutput.dir}"/>
+    <pathelement location="${ruflow.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.ruflow">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.ruflow">
+    <patternset refid="excluded.from.module.ruflow"/>
+  </patternset>
+  
+  <path id="ruflow.module.sourcepath">
+    <dirset dir="${module.ruflow.basedir}">
+      <include name="src"/>
+      <include name="gen"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.ruflow" depends="compile.module.ruflow.production,compile.module.ruflow.tests" description="Compile module RUflow"/>
+  
+  <target name="compile.module.ruflow.production" depends="register.custom.compilers" description="Compile module RUflow; production classes">
+    <mkdir dir="${ruflow.output.dir}"/>
+    <javac2 destdir="${ruflow.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ruflow}/javac">
+      <compilerarg line="${compiler.args.ruflow}"/>
+      <bootclasspath refid="ruflow.module.bootclasspath"/>
+      <classpath refid="ruflow.module.production.classpath"/>
+      <src refid="ruflow.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ruflow"/>
+    </javac2>
+    
+    <copy todir="${ruflow.output.dir}">
+      <fileset dir="${module.ruflow.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.ruflow.basedir}/gen">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.ruflow.tests" depends="register.custom.compilers,compile.module.ruflow.production" description="compile module RUflow; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.ruflow" description="cleanup module">
+    <delete dir="${ruflow.output.dir}"/>
+    <delete dir="${ruflow.testoutput.dir}"/>
+  </target>
+</project>
