@@ -42,8 +42,8 @@ public class Board extends View {
         return row * m_cellHeight + getPaddingTop();
     }
 
-    public Board(Context context, AttributeSet attrbs) {
-        super(context, attrbs);
+    public Board(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
         //Set grid color
         m_paintGrid.setStyle(Paint.Style.STROKE);
