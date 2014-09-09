@@ -125,5 +125,11 @@ public class Board extends View {
                 }
             }
         }
+        return true;
+    }
+
+    public void setColor(int color ) {
+        m_paintPath.setColor(color);
+        invalidate();
     }
 }

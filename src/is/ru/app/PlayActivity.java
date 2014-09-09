@@ -12,7 +12,7 @@ public class PlayActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.play);
+        setContentView(R.layout.board);
 
         SharedPreferences settings = getSharedPreferences("ColorPref", MODE_PRIVATE);
 
