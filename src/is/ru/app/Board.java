@@ -71,6 +71,13 @@ public class Board extends View {
     }
 
     @Override
+    protected void onSizeChanged( int xNew, int yNew, int xOld, int yOld ) {
+        int sw = Math.max(1, (int) m_paintGrid.getStrokeWidth());
+        m_cellWidth  = (xNew - getPaddingLeft() - getPaddingRight() - sw) / NUM_CELLS;
+        m_cellHeight = (yNew - getPaddingTop() - getPaddingBottom() - sw) / NUM_CELLS;
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         //Paint grid
         for (int r = 0; r < NUM_CELLS; ++r) {
