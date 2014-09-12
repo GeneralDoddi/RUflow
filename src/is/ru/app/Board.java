@@ -69,18 +69,6 @@ public class Board extends View {
     }
 
     @Override
-<<<<<<< HEAD
-    protected void onDraw(Canvas canvas) {
-
-
-        //Paint grid
-        for (int r = 0; r < NUM_CELLS; ++r) {
-            for (int c = 0; c < NUM_CELLS; ++c) {
-                int x = colToX(c);
-                int y = rowToY(r);
-=======
->>>>>>> 5f96466e798123e9d8d4218c2471a28b19825091
-
     protected void onDraw( Canvas canvas ) {
 
 
@@ -92,14 +80,9 @@ public class Board extends View {
                 canvas.drawRect( m_rect, m_paintGrid );
             }
         }
-<<<<<<< HEAD
 
-        //m_path.reset();
-        if (!m_cellPath.isEmpty()) {
-=======
         m_path.reset();
         if ( !m_cellPath.isEmpty() ) {
->>>>>>> 5f96466e798123e9d8d4218c2471a28b19825091
             List<Coordinate> colist = m_cellPath.getCoordinates();
             Coordinate co;
             /*Coordinate co = colist.get( 0 );
