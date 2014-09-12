@@ -69,7 +69,9 @@ public class Board extends View {
     }
 
     @Override
+
     protected void onDraw( Canvas canvas ) {
+
 
         for ( int r=0; r<NUM_CELLS; ++r ) {
             for (int c = 0; c<NUM_CELLS; ++c) {
@@ -117,9 +119,11 @@ public class Board extends View {
             m_cellPath.reset();
             m_cellPath.append( new Coordinate(c,r) );
         }
+
         else if ( event.getAction() == MotionEvent.ACTION_MOVE ) {
             //m_path.lineTo( colToX(c) + m_cellWidth / 2, rowToY(r) + m_cellHeight / 2 );
             if ( !m_cellPath.isEmpty() ) {
+
                 List<Coordinate> coordinateList = m_cellPath.getCoordinates();
                 Coordinate last = coordinateList.get(coordinateList.size()-1);
                 if ( areNeighbours(last.getCol(),last.getRow(), c, r)) {
