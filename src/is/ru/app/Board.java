@@ -79,6 +79,8 @@ public class Board extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+
+
         //Paint grid
         for (int r = 0; r < NUM_CELLS; ++r) {
             for (int c = 0; c < NUM_CELLS; ++c) {
@@ -90,7 +92,7 @@ public class Board extends View {
             }
         }
 
-        m_path.reset();
+        //m_path.reset();
         if (!m_cellPath.isEmpty()) {
             List<Coordinate> colist = m_cellPath.getCoordinates();
             Coordinate co = colist.get(0);
@@ -110,6 +112,7 @@ public class Board extends View {
     private boolean areNeighbours(int c1, int r1, int c2, int r2){
         return Math.abs(c1-c2) + Math.abs(r1-r2) == 1;
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int x = (int) event.getX();
