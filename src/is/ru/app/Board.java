@@ -2,6 +2,8 @@ package is.ru.app;
 
 import android.content.Context;
 import android.graphics.*;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +15,12 @@ public class Board extends View {
     private final int NUM_CELLS = 5;
     private int m_cellWidth;
     private int m_cellHeight;
+
+    // Tilraun ad bordi med 2 raudum punktum
+    private String m_board = "R.....R..................";
+
+    // Nytt shape fyrir hring
+    private ShapeDrawable m_shape = new ShapeDrawable( new OvalShape());
 
     private Rect m_rect = new Rect();
     private Paint m_paintGrid  = new Paint();
@@ -68,6 +76,11 @@ public class Board extends View {
         m_cellHeight = (yNew - getPaddingTop() - getPaddingBottom() - sw) / NUM_CELLS;
     }
 
+    //Stadsetning fyrir punkta a mappinu
+    public char getBoard( int col, int row ) {
+        return m_board.charAt(col + row * NUM_CELLS);
+    }
+
     @Override
     protected void onDraw( Canvas canvas ) {
 
@@ -78,16 +91,31 @@ public class Board extends View {
                 int y = rowToY( r );
                 m_rect.set(x, y, x + m_cellWidth, y + m_cellHeight);
                 canvas.drawRect( m_rect, m_paintGrid );
+
+                // tilraun til ad teikna hringi a bordid
+
+                m_shape.setBounds(m_rect);
+                char dot = getBoard(c, r);
+                if( dot == 'R'){
+                    m_shape.getPaint().setColor(Color.RED);
+                    m_shape.draw(canvas);
+                }
             }
         }
+
+       /* for( int row = 0; row < NUM_CELLS; ++row){
+            for(int col = 0; col < NUM_CELLS; ++col){
+
+            }
+        }*/
 
         m_path.reset();
         if ( !m_cellPath.isEmpty() ) {
             List<Coordinate> colist = m_cellPath.getCoordinates();
-            Coordinate co;
-            /*Coordinate co = colist.get( 0 );
+            //Coordinate co;
+            Coordinate co = colist.get( 0 );
             m_path.moveTo( colToX(co.getCol()) + m_cellWidth / 2,
-                           rowToY(co.getRow()) + m_cellHeight / 2 );*/
+                           rowToY(co.getRow()) + m_cellHeight / 2 );
             for ( int i=0; i<colist.size(); ++i ) {
                 co = colist.get(i);
                 m_path.lineTo( colToX(co.getCol()) + m_cellWidth / 2,
@@ -114,8 +142,7 @@ public class Board extends View {
         }
 
         if ( event.getAction() == MotionEvent.ACTION_DOWN ) {
-            //m_path.reset();
-            //m_path.moveTo( colToX(c) + m_cellWidth / 2, rowToY(r) + m_cellHeight / 2 );
+
             m_cellPath.reset();
             m_cellPath.append( new Coordinate(c,r) );
         }
