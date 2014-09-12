@@ -121,7 +121,13 @@ public class Board extends View {
             return true;
         }
 
-        if(event.getAction() == MotionEvent.ACTION_MOVE) {
+        if ( event.getAction() == MotionEvent.ACTION_DOWN ) {
+            //m_path.reset();
+            //m_path.moveTo( colToX(c) + m_cellWidth / 2, rowToY(r) + m_cellHeight / 2 );
+            m_cellPath.reset();
+            m_cellPath.append( new Coordinate(c,r) );
+        }
+        else if(event.getAction() == MotionEvent.ACTION_MOVE) {
             if(!m_cellPath.isEmpty()) {
                 List<Coordinate> coordinateList = m_cellPath.getCoordinates();
                 Coordinate last = coordinateList.get(coordinateList.size()-1);
