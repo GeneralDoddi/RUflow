@@ -18,7 +18,7 @@ public class Board extends View {
     private int m_cellHeight;
 
     // Tilraun ad bordi med 2 raudum punktum
-    private String m_board = "R..................R.....";
+    private String m_board = "R.G...........G....R.....";
 
     // Nytt shape fyrir hring
     private ShapeDrawable m_shape = new ShapeDrawable( new OvalShape());
@@ -31,6 +31,8 @@ public class Board extends View {
     private Cellpath m_cellPath = new Cellpath();
     // Cellpath array to keep all paths
     private ArrayList<Cellpath> m_cellPathList = new ArrayList<Cellpath>();
+
+    private ArrayList<Path> m_pathList = new ArrayList<Path>();
 
     private int xToCol( int x ) {
         return (x - getPaddingLeft()) / m_cellWidth;
@@ -103,6 +105,10 @@ public class Board extends View {
                     m_shape.getPaint().setColor(Color.RED);
                     m_shape.draw(canvas);
                 }
+                if( dot == 'G'){
+                    m_shape.getPaint().setColor(Color.GREEN);
+                    m_shape.draw(canvas);
+                }
             }
         }
 
@@ -121,22 +127,28 @@ public class Board extends View {
             }
         }
         // cellPathList er dreginn upp til ad teikna upp alla adra saveada cellpaths
+
+
         if( !m_cellPathList.isEmpty()) {
             for (Cellpath cellPath : m_cellPathList) {
                 List<Coordinate> colist = cellPath.getCoordinates();
                 //Coordinate co;
+                m_paintPath.setColor(cellPath.getColor());
                 Coordinate co = colist.get(0);
                 m_path.moveTo(colToX(co.getCol()) + m_cellWidth / 2,
                         rowToY(co.getRow()) + m_cellHeight / 2);
-                for (int i = 0; i < colist.size(); ++i) {
+                for (int i = 0; i < colist.size(); ++i)
+                {
                     co = colist.get(i);
                     m_path.lineTo(colToX(co.getCol()) + m_cellWidth / 2,
                             rowToY(co.getRow()) + m_cellHeight / 2);
                 }
-
             }
+
+
         }
         canvas.drawPath( m_path, m_paintPath);
+
         //m_cellPathList.add(m_cellPath);
     }
 
@@ -155,30 +167,40 @@ public class Board extends View {
         if ( c >= NUM_CELLS || r >= NUM_CELLS ) {
             return true;
         }
+        System.out.println(getBoard(c,r));
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
-        if ( event.getAction() == MotionEvent.ACTION_DOWN ) {
-
-            m_cellPath.reset();
-
-            m_cellPath.append( new Coordinate(c,r) );
-        }
-
-        else if ( event.getAction() == MotionEvent.ACTION_MOVE ) {
-            //m_path.lineTo( colToX(c) + m_cellWidth / 2, rowToY(r) + m_cellHeight / 2 );
-            if ( !m_cellPath.isEmpty() ) {
-
-                List<Coordinate> coordinateList = m_cellPath.getCoordinates();
-                Coordinate last = coordinateList.get(coordinateList.size()-1);
-                if ( areNeighbours(last.getCol(),last.getRow(), c, r)) {
-                    m_cellPath.append(new Coordinate(c, r));
-                    invalidate();
+                //Þetta breytir bara litnum á línunum GLOBAL
+                //Við þurfum að búa til arraylist af Path's sem eru búnir til til að geta ítrað
+                //í gegnum þá og bindað paintlit við hvern.
+                char color = getBoard(c, r);
+                if (color == 'R') {
+                    m_paintPath.setColor(Color.RED);
                 }
+                if (color == 'G') {
+                    m_paintPath.setColor(Color.GREEN);
+                }
+
+                m_cellPath.reset();
+
+                m_cellPath.append(new Coordinate(c, r));
+            } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                //m_path.lineTo( colToX(c) + m_cellWidth / 2, rowToY(r) + m_cellHeight / 2 );
+                if (!m_cellPath.isEmpty()) {
+
+                    List<Coordinate> coordinateList = m_cellPath.getCoordinates();
+                    Coordinate last = coordinateList.get(coordinateList.size() - 1);
+                    if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
+                        m_cellPath.append(new Coordinate(c, r));
+                        invalidate();
+                    }
+                }
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                m_cellPath.setColor(m_paintPath.getColor());
+                m_cellPathList.add(m_cellPath);
+                m_cellPath = new Cellpath();
             }
-        }
-        else if( event.getAction() == MotionEvent.ACTION_UP) {
-            m_cellPathList.add(m_cellPath);
-            m_cellPath = new Cellpath();
-        }
+
         return true;
     }
 

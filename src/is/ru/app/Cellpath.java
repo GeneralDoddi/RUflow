@@ -8,10 +8,12 @@ import java.util.List;
 /**
  * Created by olafurn on 9.9.2014.
  */
+
+
 public class Cellpath {
 
     private ArrayList<Coordinate> m_path = new ArrayList<Coordinate>();
-
+    private int color;
     public void append( Coordinate co ) {
         int idx = m_path.indexOf(  co );
         if ( idx >= 0 ) {
@@ -35,4 +37,9 @@ public class Cellpath {
     public boolean isEmpty() {
         return m_path.isEmpty();
     }
+
+    //Bætti þessu við hérna en ég held að það þurfi að útfæra þetta annarstaðar.
+    public void setColor(int color){this.color = color;}
+    public int getColor(){ return color; }
+
 }
