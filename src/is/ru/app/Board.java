@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Board extends View {
@@ -30,9 +31,15 @@ public class Board extends View {
 
     private Cellpath m_cellPath = new Cellpath();
     // Cellpath array to keep all paths
-    private ArrayList<Cellpath> m_cellPathList = new ArrayList<Cellpath>();
+    private Cellpath m_redPathList = new Cellpath();
+    private Cellpath m_greenPathList = new Cellpath();
+    private Cellpath m_bluePathList = new Cellpath();
+    private Cellpath m_yellowPathList = new Cellpath();
 
-    private ArrayList<Path> m_pathList = new ArrayList<Path>();
+    private int colorMeTimbers = 0;
+
+    //Predefined 4 litir
+    private ArrayList<SuperPath> m_pathList = new ArrayList<SuperPath>();
 
     private int xToCol( int x ) {
         return (x - getPaddingLeft()) / m_cellWidth;
@@ -56,12 +63,7 @@ public class Board extends View {
         m_paintGrid.setStyle( Paint.Style.STROKE );
         m_paintGrid.setColor( Color.GRAY );
 
-        m_paintPath.setStyle( Paint.Style.STROKE );
-        m_paintPath.setColor(Color.GREEN);
-        m_paintPath.setStrokeWidth(32);
-        m_paintPath.setStrokeCap( Paint.Cap.ROUND );
-        m_paintPath.setStrokeJoin( Paint.Join.ROUND );
-        m_paintPath.setAntiAlias( true );
+        m_paintPath = createPainter(Color.RED);
     }
 
     @Override
@@ -115,6 +117,7 @@ public class Board extends View {
         // Teikni path til ad teikna linuna i real time
         m_path.reset();
         if ( !m_cellPath.isEmpty() ) {
+            m_path = new Path();
             List<Coordinate> colist = m_cellPath.getCoordinates();
             //Coordinate co;
             Coordinate co = colist.get( 0 );
@@ -125,15 +128,16 @@ public class Board extends View {
                 m_path.lineTo( colToX(co.getCol()) + m_cellWidth / 2,
                         rowToY(co.getRow()) + m_cellHeight / 2 );
             }
+            canvas.drawPath( m_path, createPainter(colorMeTimbers));
         }
         // cellPathList er dreginn upp til ad teikna upp alla adra saveada cellpaths
 
+        //RAUTT
+        if( !m_redPathList.isEmpty()) {
+            m_path = new Path();
 
-        if( !m_cellPathList.isEmpty()) {
-            for (Cellpath cellPath : m_cellPathList) {
-                List<Coordinate> colist = cellPath.getCoordinates();
-                //Coordinate co;
-                m_paintPath.setColor(cellPath.getColor());
+                List<Coordinate> colist = m_redPathList.getCoordinates();
+
                 Coordinate co = colist.get(0);
                 m_path.moveTo(colToX(co.getCol()) + m_cellWidth / 2,
                         rowToY(co.getRow()) + m_cellHeight / 2);
@@ -143,13 +147,29 @@ public class Board extends View {
                     m_path.lineTo(colToX(co.getCol()) + m_cellWidth / 2,
                             rowToY(co.getRow()) + m_cellHeight / 2);
                 }
-            }
 
-
+            canvas.drawPath( m_path, createPainter(Color.RED));
         }
-        canvas.drawPath( m_path, m_paintPath);
+        //GRÆNT
+        if( !m_greenPathList.isEmpty()) {
+            m_path = new Path();
+                List<Coordinate> colist = m_greenPathList.getCoordinates();
+                //Coordinate co;
+                Coordinate co = colist.get(0);
+                m_path.moveTo(colToX(co.getCol()) + m_cellWidth / 2,
+                        rowToY(co.getRow()) + m_cellHeight / 2);
+                for (int i = 0; i < colist.size(); ++i)
+                {
+                    co = colist.get(i);
+                    m_path.lineTo(colToX(co.getCol()) + m_cellWidth / 2,
+                            rowToY(co.getRow()) + m_cellHeight / 2);
+                }
 
-        //m_cellPathList.add(m_cellPath);
+            canvas.drawPath( m_path, createPainter(Color.GREEN));
+        }
+
+        System.out.println(m_greenPathList.getCoordinates().size() + " - " + m_redPathList.getCoordinates().size());
+
     }
 
     private boolean areNeighbours( int c1, int r1, int c2, int r2 ) {
@@ -163,42 +183,96 @@ public class Board extends View {
         int y = (int) event.getY();
         int c = xToCol( x );
         int r = yToRow( y );
+        int arraySlot = 0;
 
         if ( c >= NUM_CELLS || r >= NUM_CELLS ) {
             return true;
         }
-        System.out.println(getBoard(c,r));
+
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
                 //Þetta breytir bara litnum á línunum GLOBAL
                 //Við þurfum að búa til arraylist af Path's sem eru búnir til til að geta ítrað
                 //í gegnum þá og bindað paintlit við hvern.
                 char color = getBoard(c, r);
-                if (color == 'R') {
+                Coordinate tempCord = new Coordinate(c , r);
+                System.out.println(c + " - " + r);
+                if (color == 'R' || m_redPathList.getCoordinates().contains(tempCord)) {
+                    //If we're on a starting dot, we want to reset the whole path.
+                    if(color == 'R')
+                    {
+                        m_redPathList.reset();
+                    }
+                    else
+                    {
+                        m_redPathList.trim(tempCord);
+                    }
+
                     m_paintPath.setColor(Color.RED);
+                    colorMeTimbers = Color.RED;
+                    m_redPathList.append(tempCord);
+
+
                 }
-                if (color == 'G') {
+                if (color == 'G' ||  m_greenPathList.getCoordinates().contains(tempCord)) {
+                    //If we're on a starting dot, we want to reset the whole path.
+                    if(color == 'G')
+                    {
+                        m_greenPathList.reset();
+                    }
+                    else
+                    {
+                        m_greenPathList.trim(tempCord);
+                    }
+
                     m_paintPath.setColor(Color.GREEN);
+                    colorMeTimbers = Color.GREEN;
+                    m_greenPathList.append(tempCord);
                 }
 
-                m_cellPath.reset();
 
-                m_cellPath.append(new Coordinate(c, r));
-            } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            }
+            else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                Coordinate tempCord = new Coordinate(c , r);
+                char color = getBoard(c, r);
                 //m_path.lineTo( colToX(c) + m_cellWidth / 2, rowToY(r) + m_cellHeight / 2 );
-                if (!m_cellPath.isEmpty()) {
+                if(colorMeTimbers == Color.RED && color != 'G') {
+                    if(m_greenPathList.getCoordinates().contains(tempCord))
+                    {
+                        System.out.println("I cut green");
+                        m_greenPathList.conflict(tempCord);
+                    }
+                    if (!m_redPathList.isEmpty()) {
 
-                    List<Coordinate> coordinateList = m_cellPath.getCoordinates();
-                    Coordinate last = coordinateList.get(coordinateList.size() - 1);
-                    if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
-                        m_cellPath.append(new Coordinate(c, r));
-                        invalidate();
+                        List<Coordinate> coordinateList = m_redPathList.getCoordinates();
+                        Coordinate last = coordinateList.get(coordinateList.size() - 1);
+                        if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
+                            m_redPathList.append(new Coordinate(c, r));
+                            invalidate();
+                        }
                     }
                 }
+
+                if(colorMeTimbers == Color.GREEN && color != 'R') {
+                    if(m_redPathList.getCoordinates().contains(tempCord))
+                    {
+                        System.out.println("I cut red");
+                        m_redPathList.conflict(tempCord);
+                    }
+                    if (!m_greenPathList.isEmpty()) {
+
+                        List<Coordinate> coordinateList = m_greenPathList.getCoordinates();
+                        Coordinate last = coordinateList.get(coordinateList.size() - 1);
+                        if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
+                            m_greenPathList.append(new Coordinate(c, r));
+                            invalidate();
+                        }
+                    }
+                }
+
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                m_cellPath.setColor(m_paintPath.getColor());
-                m_cellPathList.add(m_cellPath);
-                m_cellPath = new Cellpath();
+
+               // m_cellPath = new Cellpath();
             }
 
         return true;
@@ -207,5 +281,19 @@ public class Board extends View {
     public void setColor( int color ) {
         m_paintPath.setColor( color );
         invalidate();
+    }
+
+    public Paint createPainter(int color)
+    {
+        Paint paint = new Paint();
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(color);
+        paint.setStrokeWidth(32);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setAntiAlias(true);
+
+        return paint;
     }
 }

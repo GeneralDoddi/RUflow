@@ -26,6 +26,42 @@ public class Cellpath {
         }
     }
 
+    public void trim(Coordinate co) {
+        int idx = m_path.indexOf(co);
+
+        if(idx >= 0)
+        {
+            for(int i = m_path.size()-1; i > idx; --i)
+            {
+                m_path.remove(i);
+            }
+
+        }
+    }
+
+    public void conflict(Coordinate co)
+    {
+        int idx = m_path.indexOf(co);
+
+        if(idx >= 0)
+        {
+            for(int i = m_path.size()-1; i > idx; --i)
+            {
+                m_path.remove(i);
+
+            }
+        }
+        if(m_path.size() > 1)
+        {
+            m_path.remove(m_path.size()-1);
+        }
+        else
+        {
+            reset();
+        }
+
+    }
+
     public List<Coordinate> getCoordinates() {
         return m_path;
     }
