@@ -30,6 +30,7 @@ public class Board extends View {
     private Path m_path = new Path();
 
     private Cellpath m_cellPath = new Cellpath();
+
     // Cellpath array to keep all paths
     private Cellpath m_redPathList = new Cellpath();
     private Cellpath m_greenPathList = new Cellpath();
@@ -39,7 +40,7 @@ public class Board extends View {
     private int colorMeTimbers = 0;
 
     //Predefined 4 litir
-    private ArrayList<SuperPath> m_pathList = new ArrayList<SuperPath>();
+    private ArrayList<Cellpath> allCells = new ArrayList<Cellpath>();
 
     private int xToCol( int x ) {
         return (x - getPaddingLeft()) / m_cellWidth;
@@ -64,6 +65,8 @@ public class Board extends View {
         m_paintGrid.setColor( Color.GRAY );
 
         m_paintPath = createPainter(Color.RED);
+
+
     }
 
     @Override
