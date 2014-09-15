@@ -10,4 +10,12 @@
             android:layout_height="wrap_content"
             android:background="#444444"
             />
+
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reset"
+            android:onClick="buttonClick"
+            android:id="@+id/play_again"/>
+
 </LinearLayout>
