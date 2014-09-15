@@ -7,6 +7,7 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +33,8 @@ public class Board extends View {
 
     private Cellpath m_cellPath = new Cellpath();
 
+    private ArrayList<Cellpath> allCellPaths = new ArrayList<Cellpath>();
+
     // Cellpath array to keep all paths
     private Cellpath m_redPathList = new Cellpath();
     private Cellpath m_greenPathList = new Cellpath();
@@ -42,7 +45,7 @@ public class Board extends View {
     private int colorMeTimbers = 0;
 
     //Predefined 4 litir
-    private ArrayList<Cellpath> allCells = new ArrayList<Cellpath>();
+
 
     private int xToCol( int x ) {
         return (x - getPaddingLeft()) / m_cellWidth;
@@ -68,17 +71,23 @@ public class Board extends View {
 
         m_paintPath = createPainter(Color.RED);
 
+        allCellPaths.add(m_redPathList);
+        allCellPaths.add(m_yellowPathList);
+        allCellPaths.add(m_bluePathList);
+        allCellPaths.add(m_whitePathList);
+        allCellPaths.add(m_greenPathList);
+
 
     }
 
     @Override
     protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec ) {
-        super.onMeasure( widthMeasureSpec, heightMeasureSpec );
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width  = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
         int height = getMeasuredHeight() - getPaddingTop() - getPaddingBottom();
         int size = Math.min(width, height);
-        setMeasuredDimension( size + getPaddingLeft() + getPaddingRight(),
-                size + getPaddingTop() + getPaddingBottom() );
+        setMeasuredDimension(size + getPaddingLeft() + getPaddingRight(),
+                size + getPaddingTop() + getPaddingBottom());
     }
 
     @Override
@@ -412,6 +421,9 @@ public class Board extends View {
 
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                // m_cellPath = new Cellpath();
+                if(isWin()){
+                    Toast.makeText(getContext(),"You Win!", Toast.LENGTH_SHORT).show();
+                }
             }
 
         return true;
@@ -461,12 +473,27 @@ public class Board extends View {
     {
         int totalSize = m_redPathList.getCoordinates().size() + m_greenPathList.getCoordinates().size() + m_bluePathList.getCoordinates().size()
                 + m_whitePathList.getCoordinates().size() + m_yellowPathList.getCoordinates().size();
-        int redLength = m_redPathList.getCoordinates().size();
-        int greenLength = m_greenPathList.getCoordinates().size();
-        int blueLength = m_bluePathList.getCoordinates().size();
-        int yellowLength = m_yellowPathList.getCoordinates().size();
-        int whiteLength = m_whitePathList.getCoordinates().size();
 
-       
+        int dotSize = 0;
+
+        for(Cellpath cellPath: allCellPaths) {
+            for (Coordinate tempCord : m_redPathList.getCoordinates()) {
+
+                if ((getBoard(tempCord.getCol(), tempCord.getRow()) == 'R') ||
+                        (getBoard(tempCord.getCol(),tempCord.getCol()) == 'G') ||
+                        (getBoard(tempCord.getCol(),tempCord.getCol()) == 'B') ||
+                        (getBoard(tempCord.getCol(),tempCord.getCol()) == 'Y') ||
+                        (getBoard(tempCord.getCol(),tempCord.getCol()) == 'W')
+                        ) {
+                    dotSize++;
+                }
+            }
+        }
+
+        if((dotSize == allCellPaths.size()*2) && (totalSize == (NUM_CELLS * NUM_CELLS))){
+            return true;
+        }
+
+       return false;
     }
 }
