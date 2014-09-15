@@ -265,7 +265,8 @@ public class Board extends View {
                 char color = getBoard(c, r);
                 Coordinate tempCord = new Coordinate(c , r);
                 System.out.println(c + " - " + r);
-                if (color == 'R' || m_redPathList.getCoordinates().contains(tempCord)) {
+                if ((color == 'R' || m_redPathList.getCoordinates().contains(tempCord)) )
+                {
                     //If we're on a starting dot, we want to reset the whole path.
                     if(color == 'R')
                     {
@@ -349,7 +350,7 @@ public class Board extends View {
                 Coordinate tempCord = new Coordinate(c , r);
                 char color = getBoard(c, r);
                 //m_path.lineTo( colToX(c) + m_cellWidth / 2, rowToY(r) + m_cellHeight / 2 );
-                if(colorMeTimbers == Color.RED && color != 'G') {
+                if(movementConflict(colorMeTimbers, color) && !tooFar(colorMeTimbers)) {
 
                     lineConflict(tempCord, colorMeTimbers);
                     if (!m_redPathList.isEmpty()) {
@@ -363,7 +364,7 @@ public class Board extends View {
                     }
                 }
 
-                if(colorMeTimbers == Color.GREEN && color != 'R') {
+                if(movementConflict(colorMeTimbers, color) && !tooFar(colorMeTimbers)) {
                     lineConflict(tempCord, colorMeTimbers);
                     if (!m_greenPathList.isEmpty()) {
 
@@ -375,7 +376,7 @@ public class Board extends View {
                         }
                     }
                 }
-                if(colorMeTimbers == Color.BLUE && color != 'R') {
+                if(movementConflict(colorMeTimbers, color) && !tooFar(colorMeTimbers)) {
                     lineConflict(tempCord, colorMeTimbers);
                     if (!m_bluePathList.isEmpty()) {
 
@@ -387,7 +388,7 @@ public class Board extends View {
                         }
                     }
                 }
-                if(colorMeTimbers == Color.YELLOW && color != 'R') {
+                if(movementConflict(colorMeTimbers, color) && !tooFar(colorMeTimbers)) {
                     lineConflict(tempCord, colorMeTimbers);
                     if (!m_yellowPathList.isEmpty()) {
                         List<Coordinate> coordinateList = m_yellowPathList.getCoordinates();
@@ -398,7 +399,7 @@ public class Board extends View {
                         }
                     }
                 }
-                if(colorMeTimbers == Color.WHITE && color != 'R') {
+                if(movementConflict(colorMeTimbers, color) && !tooFar(colorMeTimbers)) {
                     lineConflict(tempCord, colorMeTimbers);
                     if (!m_whitePathList.isEmpty()) {
                         List<Coordinate> coordinateList = m_whitePathList.getCoordinates();
@@ -445,6 +446,74 @@ public class Board extends View {
             m_bluePathList.conflict(co);
         }
     }
+
+    //Check what current color is and if the color code isn't the wrong one
+    public boolean movementConflict(int colorMeTimbers, char colorCode)
+    {
+        if(colorMeTimbers == Color.RED && (colorCode != 'G'  || colorCode != 'Y' || colorCode != 'B' || colorCode != 'W'))
+        {
+            return true;
+        }
+        if(colorMeTimbers == Color.GREEN && (colorCode != 'R'  || colorCode != 'Y' || colorCode != 'B' || colorCode != 'W'))
+        {
+            return true;
+        }
+        if(colorMeTimbers == Color.BLUE && (colorCode != 'R'  || colorCode != 'Y' || colorCode != 'G' || colorCode != 'W'))
+        {
+            return true;
+        }
+        if(colorMeTimbers == Color.YELLOW && (colorCode != 'R'  || colorCode != 'G' || colorCode != 'B' || colorCode != 'W'))
+        {
+            return true;
+        }
+        if(colorMeTimbers == Color.WHITE && (colorCode != 'R'  || colorCode != 'Y' || colorCode != 'B' || colorCode != 'G'))
+        {
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public boolean tooFar(int colorMeTimbers)
+    {
+        int redSize = m_redPathList.getCoordinates().size();
+        int greenSize = m_greenPathList.getCoordinates().size();
+        int blueSize = m_bluePathList.getCoordinates().size();
+        int yellowSize = m_yellowPathList.getCoordinates().size();
+        int whiteSize = m_whitePathList.getCoordinates().size();
+
+        if(redSize > 1) {
+            Coordinate lastRed = m_redPathList.getCoordinates().get(redSize - 1);
+            if(colorMeTimbers == Color.RED && getBoard(lastRed.getCol(), lastRed.getRow()) == 'R' && redSize > 1 )
+                return true;
+        }
+       if(greenSize > 1)
+       {
+           Coordinate lastGreen = m_greenPathList.getCoordinates().get(greenSize-1);
+           if(colorMeTimbers == Color.GREEN && getBoard(lastGreen.getCol(), lastGreen.getRow()) == 'G' && greenSize > 1 )
+               return true;
+       }
+        if(blueSize > 1)
+        {
+            Coordinate lastBlue = m_bluePathList.getCoordinates().get(blueSize-1);
+            if(colorMeTimbers == Color.BLUE && getBoard(lastBlue.getCol(), lastBlue.getRow()) == 'B' && blueSize > 1 )
+                return true;
+
+        }
+        if(yellowSize > 1)
+        {
+            Coordinate lastYellow = m_yellowPathList.getCoordinates().get(yellowSize-1);
+            if(colorMeTimbers == Color.YELLOW && getBoard(lastYellow.getCol(), lastYellow.getRow()) == 'Y' && yellowSize > 1 )
+                return true;
+        }
+        if(whiteSize > 1)
+        {
+            Coordinate lastWhite = m_whitePathList.getCoordinates().get(whiteSize-1);
+            if(colorMeTimbers == Color.WHITE && getBoard(lastWhite.getCol(), lastWhite.getRow()) == 'W' && whiteSize > 1 )
+                return true;
+        }
+        return false;
+    }
     public Paint createPainter(int color)
     {
         Paint paint = new Paint();
@@ -467,6 +536,7 @@ public class Board extends View {
         int yellowLength = m_yellowPathList.getCoordinates().size();
         int whiteLength = m_whitePathList.getCoordinates().size();
 
-       
+        return true;
+
     }
 }
