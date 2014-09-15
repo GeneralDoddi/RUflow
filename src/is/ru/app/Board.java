@@ -350,11 +350,8 @@ public class Board extends View {
                 char color = getBoard(c, r);
                 //m_path.lineTo( colToX(c) + m_cellWidth / 2, rowToY(r) + m_cellHeight / 2 );
                 if(colorMeTimbers == Color.RED && color != 'G') {
-                    if(m_greenPathList.getCoordinates().contains(tempCord))
-                    {
-                        System.out.println("I cut green");
-                        m_greenPathList.conflict(tempCord);
-                    }
+
+                    lineConflict(tempCord, colorMeTimbers);
                     if (!m_redPathList.isEmpty()) {
 
                         List<Coordinate> coordinateList = m_redPathList.getCoordinates();
@@ -367,11 +364,7 @@ public class Board extends View {
                 }
 
                 if(colorMeTimbers == Color.GREEN && color != 'R') {
-                    if(m_redPathList.getCoordinates().contains(tempCord))
-                    {
-                        System.out.println("I cut red");
-                        m_redPathList.conflict(tempCord);
-                    }
+                    lineConflict(tempCord, colorMeTimbers);
                     if (!m_greenPathList.isEmpty()) {
 
                         List<Coordinate> coordinateList = m_greenPathList.getCoordinates();
@@ -383,11 +376,7 @@ public class Board extends View {
                     }
                 }
                 if(colorMeTimbers == Color.BLUE && color != 'R') {
-                    if(m_redPathList.getCoordinates().contains(tempCord))
-                    {
-                        System.out.println("I cut red");
-                        m_redPathList.conflict(tempCord);
-                    }
+                    lineConflict(tempCord, colorMeTimbers);
                     if (!m_bluePathList.isEmpty()) {
 
                         List<Coordinate> coordinateList = m_bluePathList.getCoordinates();
@@ -399,13 +388,8 @@ public class Board extends View {
                     }
                 }
                 if(colorMeTimbers == Color.YELLOW && color != 'R') {
-                    if(m_redPathList.getCoordinates().contains(tempCord))
-                    {
-                        System.out.println("I cut red");
-                        m_redPathList.conflict(tempCord);
-                    }
+                    lineConflict(tempCord, colorMeTimbers);
                     if (!m_yellowPathList.isEmpty()) {
-
                         List<Coordinate> coordinateList = m_yellowPathList.getCoordinates();
                         Coordinate last = coordinateList.get(coordinateList.size() - 1);
                         if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
@@ -415,13 +399,8 @@ public class Board extends View {
                     }
                 }
                 if(colorMeTimbers == Color.WHITE && color != 'R') {
-                    if(m_redPathList.getCoordinates().contains(tempCord))
-                    {
-                        System.out.println("I cut red");
-                        m_redPathList.conflict(tempCord);
-                    }
+                    lineConflict(tempCord, colorMeTimbers);
                     if (!m_whitePathList.isEmpty()) {
-
                         List<Coordinate> coordinateList = m_whitePathList.getCoordinates();
                         Coordinate last = coordinateList.get(coordinateList.size() - 1);
                         if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
@@ -432,7 +411,6 @@ public class Board extends View {
                 }
 
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-
                // m_cellPath = new Cellpath();
             }
 
@@ -443,18 +421,52 @@ public class Board extends View {
         m_paintPath.setColor( color );
         invalidate();
     }
-
+    //Cuts all paths that our line is going over
+    public void lineConflict(Coordinate co, int color)
+    {
+        if(m_greenPathList.getCoordinates().contains(co) && color != Color.GREEN)
+        {
+            m_greenPathList.conflict(co);
+        }
+        if(m_redPathList.getCoordinates().contains(co) && color != Color.RED)
+        {
+            m_redPathList.conflict(co);
+        }
+        if(m_yellowPathList.getCoordinates().contains(co) && color != Color.YELLOW)
+        {
+            m_yellowPathList.conflict(co);
+        }
+        if(m_whitePathList.getCoordinates().contains(co) && color != Color.WHITE)
+        {
+            m_whitePathList.conflict(co);
+        }
+        if(m_bluePathList.getCoordinates().contains(co) && color != Color.BLUE)
+        {
+            m_bluePathList.conflict(co);
+        }
+    }
     public Paint createPainter(int color)
     {
         Paint paint = new Paint();
-
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(color);
         paint.setStrokeWidth(80);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setAntiAlias(true);
-
         return paint;
+    }
+
+    public boolean isWin()
+    {
+        int totalSize = m_redPathList.getCoordinates().size() + m_greenPathList.getCoordinates().size() + m_bluePathList.getCoordinates().size()
+                + m_whitePathList.getCoordinates().size() + m_yellowPathList.getCoordinates().size();
+        int redLength = m_redPathList.getCoordinates().size();
+        int greenLength = m_greenPathList.getCoordinates().size();
+        int blueLength = m_bluePathList.getCoordinates().size();
+        int yellowLength = m_yellowPathList.getCoordinates().size();
+        int whiteLength = m_whitePathList.getCoordinates().size();
+
+       
     }
 }
