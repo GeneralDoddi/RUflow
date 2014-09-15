@@ -19,7 +19,8 @@ public class Board extends View {
     private int m_cellHeight;
 
     // Tilraun ad bordi med 2 raudum punktum
-    private String m_board = "R.G...........G....R.....";
+    private String m_board = "R.G.Y..B.W......G.Y..RBW.";
+    // "R.G.Y..B.O......G.Y..R.B.O.;
 
     // Nytt shape fyrir hring
     private ShapeDrawable m_shape = new ShapeDrawable( new OvalShape());
@@ -36,6 +37,7 @@ public class Board extends View {
     private Cellpath m_greenPathList = new Cellpath();
     private Cellpath m_bluePathList = new Cellpath();
     private Cellpath m_yellowPathList = new Cellpath();
+    private Cellpath m_whitePathList = new Cellpath();
 
     private int colorMeTimbers = 0;
 
@@ -114,6 +116,18 @@ public class Board extends View {
                     m_shape.getPaint().setColor(Color.GREEN);
                     m_shape.draw(canvas);
                 }
+                if( dot == 'B'){
+                    m_shape.getPaint().setColor(Color.BLUE);
+                    m_shape.draw(canvas);
+                }
+                if( dot == 'Y'){
+                    m_shape.getPaint().setColor(Color.YELLOW);
+                    m_shape.draw(canvas);
+                }
+                if( dot == 'W'){
+                    m_shape.getPaint().setColor(Color.WHITE);
+                    m_shape.draw(canvas);
+                }
             }
         }
 
@@ -170,8 +184,59 @@ public class Board extends View {
 
             canvas.drawPath( m_path, createPainter(Color.GREEN));
         }
+        // BLUE
+        if( !m_bluePathList.isEmpty()) {
+            m_path = new Path();
+            List<Coordinate> colist = m_bluePathList.getCoordinates();
+            //Coordinate co;
+            Coordinate co = colist.get(0);
+            m_path.moveTo(colToX(co.getCol()) + m_cellWidth / 2,
+                    rowToY(co.getRow()) + m_cellHeight / 2);
+            for (int i = 0; i < colist.size(); ++i)
+            {
+                co = colist.get(i);
+                m_path.lineTo(colToX(co.getCol()) + m_cellWidth / 2,
+                        rowToY(co.getRow()) + m_cellHeight / 2);
+            }
 
-        System.out.println(m_greenPathList.getCoordinates().size() + " - " + m_redPathList.getCoordinates().size());
+            canvas.drawPath( m_path, createPainter(Color.BLUE));
+        }
+        //Yellow
+        if( !m_yellowPathList.isEmpty()) {
+            m_path = new Path();
+            List<Coordinate> colist = m_yellowPathList.getCoordinates();
+            //Coordinate co;
+            Coordinate co = colist.get(0);
+            m_path.moveTo(colToX(co.getCol()) + m_cellWidth / 2,
+                    rowToY(co.getRow()) + m_cellHeight / 2);
+            for (int i = 0; i < colist.size(); ++i)
+            {
+                co = colist.get(i);
+                m_path.lineTo(colToX(co.getCol()) + m_cellWidth / 2,
+                        rowToY(co.getRow()) + m_cellHeight / 2);
+            }
+
+            canvas.drawPath( m_path, createPainter(Color.YELLOW));
+        }
+        //White
+        if( !m_whitePathList.isEmpty()) {
+            m_path = new Path();
+            List<Coordinate> colist = m_whitePathList.getCoordinates();
+            //Coordinate co;
+            Coordinate co = colist.get(0);
+            m_path.moveTo(colToX(co.getCol()) + m_cellWidth / 2,
+                    rowToY(co.getRow()) + m_cellHeight / 2);
+            for (int i = 0; i < colist.size(); ++i)
+            {
+                co = colist.get(i);
+                m_path.lineTo(colToX(co.getCol()) + m_cellWidth / 2,
+                        rowToY(co.getRow()) + m_cellHeight / 2);
+            }
+
+            canvas.drawPath( m_path, createPainter(Color.WHITE));
+        }
+
+        //System.out.println(m_greenPathList.getCoordinates().size() + " - " + m_redPathList.getCoordinates().size());
 
     }
 
@@ -232,6 +297,51 @@ public class Board extends View {
                     colorMeTimbers = Color.GREEN;
                     m_greenPathList.append(tempCord);
                 }
+                if (color == 'B' ||  m_bluePathList.getCoordinates().contains(tempCord)) {
+                    //If we're on a starting dot, we want to reset the whole path.
+                    if(color == 'B')
+                    {
+                        m_bluePathList.reset();
+                    }
+                    else
+                    {
+                        m_greenPathList.trim(tempCord);
+                    }
+
+                    m_paintPath.setColor(Color.BLUE);
+                    colorMeTimbers = Color.BLUE;
+                    m_bluePathList.append(tempCord);
+                }
+                if (color == 'Y' ||  m_yellowPathList.getCoordinates().contains(tempCord)) {
+                    //If we're on a starting dot, we want to reset the whole path.
+                    if(color == 'Y')
+                    {
+                        m_yellowPathList.reset();
+                    }
+                    else
+                    {
+                        m_greenPathList.trim(tempCord);
+                    }
+
+                    m_paintPath.setColor(Color.YELLOW);
+                    colorMeTimbers = Color.YELLOW;
+                    m_yellowPathList.append(tempCord);
+                }
+                if (color == 'W' ||  m_whitePathList.getCoordinates().contains(tempCord)) {
+                    //If we're on a starting dot, we want to reset the whole path.
+                    if(color == 'W')
+                    {
+                        m_whitePathList.reset();
+                    }
+                    else
+                    {
+                        m_greenPathList.trim(tempCord);
+                    }
+
+                    m_paintPath.setColor(Color.WHITE);
+                    colorMeTimbers = Color.WHITE;
+                    m_whitePathList.append(tempCord);
+                }
 
 
             }
@@ -272,6 +382,54 @@ public class Board extends View {
                         }
                     }
                 }
+                if(colorMeTimbers == Color.BLUE && color != 'R') {
+                    if(m_redPathList.getCoordinates().contains(tempCord))
+                    {
+                        System.out.println("I cut red");
+                        m_redPathList.conflict(tempCord);
+                    }
+                    if (!m_bluePathList.isEmpty()) {
+
+                        List<Coordinate> coordinateList = m_bluePathList.getCoordinates();
+                        Coordinate last = coordinateList.get(coordinateList.size() - 1);
+                        if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
+                            m_bluePathList.append(new Coordinate(c, r));
+                            invalidate();
+                        }
+                    }
+                }
+                if(colorMeTimbers == Color.YELLOW && color != 'R') {
+                    if(m_redPathList.getCoordinates().contains(tempCord))
+                    {
+                        System.out.println("I cut red");
+                        m_redPathList.conflict(tempCord);
+                    }
+                    if (!m_yellowPathList.isEmpty()) {
+
+                        List<Coordinate> coordinateList = m_yellowPathList.getCoordinates();
+                        Coordinate last = coordinateList.get(coordinateList.size() - 1);
+                        if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
+                            m_yellowPathList.append(new Coordinate(c, r));
+                            invalidate();
+                        }
+                    }
+                }
+                if(colorMeTimbers == Color.WHITE && color != 'R') {
+                    if(m_redPathList.getCoordinates().contains(tempCord))
+                    {
+                        System.out.println("I cut red");
+                        m_redPathList.conflict(tempCord);
+                    }
+                    if (!m_whitePathList.isEmpty()) {
+
+                        List<Coordinate> coordinateList = m_whitePathList.getCoordinates();
+                        Coordinate last = coordinateList.get(coordinateList.size() - 1);
+                        if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
+                            m_whitePathList.append(new Coordinate(c, r));
+                            invalidate();
+                        }
+                    }
+                }
 
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
 
@@ -292,7 +450,7 @@ public class Board extends View {
 
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(color);
-        paint.setStrokeWidth(32);
+        paint.setStrokeWidth(80);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setAntiAlias(true);
