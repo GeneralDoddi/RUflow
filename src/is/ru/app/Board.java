@@ -267,13 +267,8 @@ public class Board extends View {
         }
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-                //Þetta breytir bara litnum á línunum GLOBAL
-                //Við þurfum að búa til arraylist af Path's sem eru búnir til til að geta ítrað
-                //í gegnum þá og bindað paintlit við hvern.
                 char color = getBoard(c, r);
                 Coordinate tempCord = new Coordinate(c , r);
-                System.out.println(c + " - " + r);
                 if ((color == 'R' || m_redPathList.getCoordinates().contains(tempCord)) )
                 {
                     //If we're on a starting dot, we want to reset the whole path.
@@ -462,30 +457,33 @@ public class Board extends View {
     //Check what current color is and if the color code isn't the wrong one
     public boolean movementConflict(int colorMeTimbers, char colorCode)
     {
-        if(colorMeTimbers == Color.RED && (colorCode != 'G'  || colorCode != 'Y' || colorCode != 'B' || colorCode != 'W'))
-        {
-            return true;
-        }
-        if(colorMeTimbers == Color.GREEN && (colorCode != 'R'  || colorCode != 'Y' || colorCode != 'B' || colorCode != 'W'))
-        {
-            return true;
-        }
-        if(colorMeTimbers == Color.BLUE && (colorCode != 'R'  || colorCode != 'Y' || colorCode != 'G' || colorCode != 'W'))
-        {
-            return true;
-        }
-        if(colorMeTimbers == Color.YELLOW && (colorCode != 'R'  || colorCode != 'G' || colorCode != 'B' || colorCode != 'W'))
-        {
-            return true;
-        }
-        if(colorMeTimbers == Color.WHITE && (colorCode != 'R'  || colorCode != 'Y' || colorCode != 'B' || colorCode != 'G'))
-        {
-            return true;
-        }
-        else
-            return false;
-    }
 
+        if(colorMeTimbers == Color.RED && (colorCode != 'G'  && colorCode != 'Y' && colorCode != 'B' && colorCode != 'W'))
+        {
+
+            return true;
+        }
+        if(colorMeTimbers == Color.GREEN && (colorCode != 'R'  && colorCode != 'Y' && colorCode != 'B' && colorCode != 'W'))
+        {
+            return true;
+        }
+        if(colorMeTimbers == Color.BLUE && (colorCode != 'R'  && colorCode != 'Y' && colorCode != 'G' && colorCode != 'W'))
+        {
+            return true;
+        }
+        if(colorMeTimbers == Color.YELLOW && (colorCode != 'R'  && colorCode != 'G' && colorCode != 'B' && colorCode != 'W'))
+        {
+            return true;
+        }
+        if(colorMeTimbers == Color.WHITE && (colorCode != 'R'  && colorCode != 'Y' && colorCode != 'B' && colorCode != 'G'))
+        {
+            return true;
+        }
+
+        return false;
+    }
+    //Prevents us from going from a start point of a color,
+    // and then to an endpoint and continuing through it.
     public boolean tooFar(int colorMeTimbers)
     {
         int redSize = m_redPathList.getCoordinates().size();
