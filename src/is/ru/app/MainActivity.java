@@ -6,6 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -13,11 +23,15 @@ import android.widget.Button;
  */
 public class MainActivity extends Activity {
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+
     }
 
     public void buttonClick(View view){
@@ -25,10 +39,14 @@ public class MainActivity extends Activity {
         int id = button.getId();
 
         if(id == R.id.button_play) {
-            startActivity(new Intent( this, PlayActivity.class));
+            //startActivity(new Intent( this, PlayActivity.class));
+            startActivity(new Intent( this, SelectActivity.class));
         }
         else if (id == R.id.button_color){
             startActivity(new Intent(this, ColorListActivity.class));
         }
+
     }
+
+
 }

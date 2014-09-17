@@ -13,6 +13,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".PlayActivity"/>
+        <activity android:name=".SelectActivity"/>
+        <activity android:name=".PuzzleSelectActivity"/>
         <activity android:name=".ColorListActivity" android:label="Colors"/>
     </application>
 </manifest>
