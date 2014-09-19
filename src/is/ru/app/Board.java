@@ -203,105 +203,56 @@ public class Board extends View {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
                 // WORK IN PROGRESS, NEEDS FIXING!
-                Coordinate tempCord = new Coordinate(c , r);
-                for(Cellpath tempPath:allCellPaths){
-                        if (tempPath.getCoordinates().contains(tempCord) || mGlobals.flowCoord.contains(tempCord)) {
-                            if (mGlobals.flowCoord.contains(tempCord)) {
-                                tempPath.reset();
-                            } else {
-                                tempPath.trim(tempCord);
-                            }
-                            m_paintPath.setColor(colorList.get(allCellPaths.indexOf(tempPath)));
-                            colorMeTimbers = colorList.get(allCellPaths.indexOf(tempPath));
-                            tempPath.append(tempCord);
-                            break;
+                Coordinate tempCord = new Coordinate(c, r);
+                //Finna hvort þetta sé upphafspunktur
+                int found = mGlobals.flowCoord.indexOf(tempCord);
+                System.out.println(found);
+                if (found == -1) {
+
+                    for (Cellpath i : allCellPaths) {
+                        if (i.getCoordinates().contains(tempCord)) {
+                            found = allCellPaths.indexOf(i);
                         }
+                    }
+
+                } else {
+                    System.out.println(found);
+                    Cellpath tempPath = allCellPaths.get(found / 2);
+
+
+                    if (tempPath.getCoordinates().contains(tempCord) || mGlobals.flowCoord.contains(tempCord)) {
+                        if (mGlobals.flowCoord.contains(tempCord)) {
+                            tempPath.reset();
+                        } else {
+                            tempPath.trim(tempCord);
+                        }
+                        m_paintPath.setColor(colorList.get(allCellPaths.indexOf(tempPath)));
+                        colorMeTimbers = colorList.get(allCellPaths.indexOf(tempPath));
+                        tempPath.append(tempCord);
+                    }
                 }
-                /*char color = getBoard(c, r);
-                Coordinate tempCord = new Coordinate(c , r);
-                if ((color == 'R' || m_redPathList.getCoordinates().contains(tempCord)) )
-                {
-                    //If we're on a starting dot, we want to reset the whole path.
-                    if(color == 'R')
-                    {
-                        m_redPathList.reset();
-                    }
-                    else
-                    {
-                        m_redPathList.trim(tempCord);
-                    }
-
-                    m_paintPath.setColor(Color.RED);
-                    colorMeTimbers = Color.RED;
-                    m_redPathList.append(tempCord);
-
-
-                }
-                if (color == 'G' ||  m_greenPathList.getCoordinates().contains(tempCord)) {
-                    //If we're on a starting dot, we want to reset the whole path.
-                    if(color == 'G')
-                    {
-                        m_greenPathList.reset();
-                    }
-                    else
-                    {
-                        m_greenPathList.trim(tempCord);
-                    }
-
-                    m_paintPath.setColor(Color.GREEN);
-                    colorMeTimbers = Color.GREEN;
-                    m_greenPathList.append(tempCord);
-                }
-                if (color == 'B' ||  m_bluePathList.getCoordinates().contains(tempCord)) {
-                    //If we're on a starting dot, we want to reset the whole path.
-                    if(color == 'B')
-                    {
-                        m_bluePathList.reset();
-                    }
-                    else
-                    {
-                        m_greenPathList.trim(tempCord);
-                    }
-
-                    m_paintPath.setColor(Color.BLUE);
-                    colorMeTimbers = Color.BLUE;
-                    m_bluePathList.append(tempCord);
-                }
-                if (color == 'Y' ||  m_yellowPathList.getCoordinates().contains(tempCord)) {
-                    //If we're on a starting dot, we want to reset the whole path.
-                    if(color == 'Y')
-                    {
-                        m_yellowPathList.reset();
-                    }
-                    else
-                    {
-                        m_greenPathList.trim(tempCord);
-                    }
-
-                    m_paintPath.setColor(Color.YELLOW);
-                    colorMeTimbers = Color.YELLOW;
-                    m_yellowPathList.append(tempCord);
-                }
-                if (color == 'W' ||  m_whitePathList.getCoordinates().contains(tempCord)) {
-                    //If we're on a starting dot, we want to reset the whole path.
-                    if(color == 'W')
-                    {
-                        m_whitePathList.reset();
-                    }
-                    else
-                    {
-                        m_greenPathList.trim(tempCord);
-                    }
-
-                    m_paintPath.setColor(Color.WHITE);
-                    colorMeTimbers = Color.WHITE;
-                    m_whitePathList.append(tempCord);
-                }*/
-
-
             }
+
             else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+
                 Coordinate tempCord = new Coordinate(c , r);
+
+
+                if(movementConflict(tempCord,colorMeTimbers) && !tooFar(colorMeTimbers)){
+
+                    lineConflict(tempCord, colorMeTimbers);
+
+                    if (!allCellPaths.get(colorList.indexOf(colorMeTimbers)).isEmpty()) {
+
+                        List<Coordinate> coordinateList = allCellPaths.get(colorList.indexOf(colorMeTimbers)).getCoordinates();
+                        Coordinate last = coordinateList.get(coordinateList.size() - 1);
+                        if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
+                            allCellPaths.get(colorList.indexOf(colorMeTimbers)).append(tempCord);
+                            invalidate();
+                        }
+                    }
+                }
+                /*Coordinate tempCord = new Coordinate(c , r);
                 char color = getBoard(c, r);
                 //m_path.lineTo( colToX(c) + m_cellWidth / 2, rowToY(r) + m_cellHeight / 2 );
                 if(movementConflict(colorMeTimbers, color) && !tooFar(colorMeTimbers)) {
@@ -354,7 +305,7 @@ public class Board extends View {
                     }
                 }
                 if(movementConflict(colorMeTimbers, color) && !tooFar(colorMeTimbers)) {
-                    lineConflict(tempCord, colorMeTimbers);
+                    lineConflict(tempCord, colorMeTimbers, index);
                     if (!m_whitePathList.isEmpty()) {
                         List<Coordinate> coordinateList = m_whitePathList.getCoordinates();
                         Coordinate last = coordinateList.get(coordinateList.size() - 1);
@@ -363,7 +314,7 @@ public class Board extends View {
                             invalidate();
                         }
                     }
-                }
+                }*/
 
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                // m_cellPath = new Cellpath();
@@ -382,6 +333,14 @@ public class Board extends View {
     //Cuts all paths that our line is going over
     public void lineConflict(Coordinate co, int color)
     {
+        for(Cellpath tempPath:allCellPaths){
+            if(tempPath.getCoordinates().contains(co) && (allCellPaths.indexOf(tempPath) != colorList.indexOf(colorMeTimbers))){
+                tempPath.conflict(co);
+                break;
+            }
+        }
+
+        /*
         if(m_greenPathList.getCoordinates().contains(co) && color != Color.GREEN)
         {
             m_greenPathList.conflict(co);
@@ -401,14 +360,20 @@ public class Board extends View {
         if(m_bluePathList.getCoordinates().contains(co) && color != Color.BLUE)
         {
             m_bluePathList.conflict(co);
-        }
+        }*/
     }
 
     //Check what current color is and if the color code isn't the wrong one
-    public boolean movementConflict(int colorMeTimbers, char colorCode)
+    public boolean movementConflict(Coordinate co ,int colorMeTimbers)
     {
+        //
+        int index = colorList.indexOf(colorMeTimbers);
 
-        if(colorMeTimbers == Color.RED && (colorCode != 'G'  && colorCode != 'Y' && colorCode != 'B' && colorCode != 'W'))
+        if(mGlobals.flowCoord.indexOf(co) != index / 2){
+            return true;
+        }
+
+        /*if(colorMeTimbers == Color.RED && (colorCode != 'G'  && colorCode != 'Y' && colorCode != 'B' && colorCode != 'W'))
         {
 
             return true;
@@ -428,7 +393,7 @@ public class Board extends View {
         if(colorMeTimbers == Color.WHITE && (colorCode != 'R'  && colorCode != 'Y' && colorCode != 'B' && colorCode != 'G'))
         {
             return true;
-        }
+        }*/
 
         return false;
     }
