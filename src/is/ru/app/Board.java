@@ -202,6 +202,7 @@ public class Board extends View {
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
+                // WORK IN PROGRESS, NEEDS FIXING!
                 Coordinate tempCord = new Coordinate(c , r);
                 for(Cellpath tempPath:allCellPaths){
                         if (tempPath.getCoordinates().contains(tempCord) || mGlobals.flowCoord.contains(tempCord)) {
