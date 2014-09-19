@@ -13,7 +13,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/* sound shit */
+
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.media.SoundPool.OnLoadCompleteListener;
+import android.widget.Toast;
+
+
 public class Board extends View {
+
+
+
+
 
     private Global mGlobals = Global.getInstance();
 
@@ -202,6 +214,8 @@ public class Board extends View {
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
+
+
                 // WORK IN PROGRESS, NEEDS FIXING!
                 Coordinate tempCord = new Coordinate(c, r);
                 //Finna hvort þetta sé upphafspunktur
@@ -211,11 +225,13 @@ public class Board extends View {
 
                     for (Cellpath i : allCellPaths) {
                         if (i.getCoordinates().contains(tempCord)) {
+                            System.out.println("IM LOOKING FOR JESUS");
                             found = allCellPaths.indexOf(i);
                         }
                     }
 
-                } else {
+                }
+
                     System.out.println(found);
                     Cellpath tempPath = allCellPaths.get(found / 2);
 
@@ -231,7 +247,7 @@ public class Board extends View {
                         tempPath.append(tempCord);
                     }
                 }
-            }
+
 
             else if (event.getAction() == MotionEvent.ACTION_MOVE) {
 

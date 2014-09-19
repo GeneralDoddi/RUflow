@@ -17,5 +17,19 @@
             android:text="Reset"
             android:onClick="buttonClick"
             android:id="@+id/play_again"/>
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PLAY SOUND"
+            android:onClick="playSound"
+            android:id="@+id/play"
+           />
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pause sound"
+            android:onClick="pauseSound"
+            android:id="@+id/pause"
+            />
 
 </LinearLayout>
