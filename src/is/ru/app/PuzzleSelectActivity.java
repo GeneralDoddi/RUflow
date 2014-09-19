@@ -75,16 +75,31 @@ public class PuzzleSelectActivity extends ListActivity{
 
     @Override
     protected void onListItemClick( ListView l, View v, int position, long id){
-        Puzzle colorElement = (Puzzle) l.getAdapter().getItem(position);
+        Puzzle selectedPuzzle = (Puzzle) l.getAdapter().getItem(position);
 
+        mGlobals.flowCoord = flowList(selectedPuzzle);
 
+        startActivity(new Intent(this, PlayActivity.class));
+    }
 
-        startActivity(new Intent( this, PlayActivity.class));
-        /*
-        SharedPreferences settings = getSharedPreferences( "ColorPref", MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-        //editor.putInt ("pathColor", colorElement.getColor());
-        editor.commit();*/
+    private ArrayList<Coordinate> flowList(Puzzle selectedPuzzle){
+
+        ArrayList<Coordinate> flowList = new ArrayList<Coordinate>();
+
+        String[] test = selectedPuzzle.getFlows().split(", ");
+        ArrayList<String[]> split = new ArrayList<String[]>();
+        for(String temp:test) {
+            split.add(temp.substring(1).split("[ () ]"));
+        }
+
+        for(String[] tempString: split){
+            for(int i = 0; i < tempString.length; i = i + 2){
+                Coordinate flowCoord = new Coordinate(Integer.parseInt(tempString[i]), Integer.parseInt(tempString[i+1]));
+                flowList.add(flowCoord);
+            }
+        }
+
+        return flowList;
     }
 
     private void readLevels( InputStream is, List<Puzzle> puzzles) {

@@ -9,6 +9,7 @@ public class Global {
 
     public List<Pack> mPacks;
     public String packSelect;
+    public List<Coordinate> flowCoord;
 
     ///
     private static Global mInstance = new Global();
