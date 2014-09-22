@@ -24,17 +24,14 @@ import android.widget.Toast;
 public class Board extends View {
 
 
-
-
-
     private Global mGlobals = Global.getInstance();
 
-    private final int NUM_CELLS = 5;
+    private final int NUM_CELLS = mGlobals.mSize;
     private int m_cellWidth;
     private int m_cellHeight;
 
     // Tilraun ad bordi med 2 raudum punktum
-    private String m_board = "R.G.Y..B.W......G.Y..RBW.";
+    //private String m_board = "R.G.Y..B.W......G.Y..RBW.";
     // "R.G.Y..B.O......G.Y..R.B.O.;
 
 
@@ -126,9 +123,9 @@ public class Board extends View {
     }
 
     //Stadsetning fyrir punkta a mappinu
-    public char getBoard( int col, int row ) {
+   /* public char getBoard( int col, int row ) {
         return m_board.charAt(col + row * NUM_CELLS);
-    }
+    }*/
 
 
 
@@ -220,7 +217,7 @@ public class Board extends View {
                 Coordinate tempCord = new Coordinate(c, r);
                 //Finna hvort þetta sé upphafspunktur
                 int found = mGlobals.flowCoord.indexOf(tempCord);
-                System.out.println(found);
+                System.out.println("Flow - "+found);
                 if (found == -1) {
 
                     for (Cellpath i : allCellPaths) {
@@ -229,10 +226,10 @@ public class Board extends View {
                             found = allCellPaths.indexOf(i);
                         }
                     }
-
+                    System.out.println("Nonflow - " + found);
                 }
 
-                    System.out.println(found);
+
                     Cellpath tempPath = allCellPaths.get(found / 2);
 
 
@@ -245,6 +242,7 @@ public class Board extends View {
                         m_paintPath.setColor(colorList.get(allCellPaths.indexOf(tempPath)));
                         colorMeTimbers = colorList.get(allCellPaths.indexOf(tempPath));
                         tempPath.append(tempCord);
+                        System.out.println("Added - " + tempCord.getCol() + "," + tempCord.getRow());
                     }
                 }
 
@@ -265,73 +263,10 @@ public class Board extends View {
                         if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
                             allCellPaths.get(colorList.indexOf(colorMeTimbers)).append(tempCord);
                             invalidate();
+                            System.out.println("Added - " + tempCord.getCol() + "," + tempCord.getRow());
                         }
                     }
                 }
-                /*Coordinate tempCord = new Coordinate(c , r);
-                char color = getBoard(c, r);
-                //m_path.lineTo( colToX(c) + m_cellWidth / 2, rowToY(r) + m_cellHeight / 2 );
-                if(movementConflict(colorMeTimbers, color) && !tooFar(colorMeTimbers)) {
-
-                    lineConflict(tempCord, colorMeTimbers);
-                    if (!m_redPathList.isEmpty()) {
-
-                        List<Coordinate> coordinateList = m_redPathList.getCoordinates();
-                        Coordinate last = coordinateList.get(coordinateList.size() - 1);
-                        if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
-                            m_redPathList.append(new Coordinate(c, r));
-                            invalidate();
-                        }
-                    }
-                }
-
-                if(movementConflict(colorMeTimbers, color) && !tooFar(colorMeTimbers)) {
-                    lineConflict(tempCord, colorMeTimbers);
-                    if (!m_greenPathList.isEmpty()) {
-
-                        List<Coordinate> coordinateList = m_greenPathList.getCoordinates();
-                        Coordinate last = coordinateList.get(coordinateList.size() - 1);
-                        if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
-                            m_greenPathList.append(new Coordinate(c, r));
-                            invalidate();
-                        }
-                    }
-                }
-                if(movementConflict(colorMeTimbers, color) && !tooFar(colorMeTimbers)) {
-                    lineConflict(tempCord, colorMeTimbers);
-                    if (!m_bluePathList.isEmpty()) {
-
-                        List<Coordinate> coordinateList = m_bluePathList.getCoordinates();
-                        Coordinate last = coordinateList.get(coordinateList.size() - 1);
-                        if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
-                            m_bluePathList.append(new Coordinate(c, r));
-                            invalidate();
-                        }
-                    }
-                }
-                if(movementConflict(colorMeTimbers, color) && !tooFar(colorMeTimbers)) {
-                    lineConflict(tempCord, colorMeTimbers);
-                    if (!m_yellowPathList.isEmpty()) {
-                        List<Coordinate> coordinateList = m_yellowPathList.getCoordinates();
-                        Coordinate last = coordinateList.get(coordinateList.size() - 1);
-                        if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
-                            m_yellowPathList.append(new Coordinate(c, r));
-                            invalidate();
-                        }
-                    }
-                }
-                if(movementConflict(colorMeTimbers, color) && !tooFar(colorMeTimbers)) {
-                    lineConflict(tempCord, colorMeTimbers, index);
-                    if (!m_whitePathList.isEmpty()) {
-                        List<Coordinate> coordinateList = m_whitePathList.getCoordinates();
-                        Coordinate last = coordinateList.get(coordinateList.size() - 1);
-                        if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
-                            m_whitePathList.append(new Coordinate(c, r));
-                            invalidate();
-                        }
-                    }
-                }*/
-
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                // m_cellPath = new Cellpath();
                 if(isWin()){
@@ -355,28 +290,6 @@ public class Board extends View {
                 break;
             }
         }
-
-        /*
-        if(m_greenPathList.getCoordinates().contains(co) && color != Color.GREEN)
-        {
-            m_greenPathList.conflict(co);
-        }
-        if(m_redPathList.getCoordinates().contains(co) && color != Color.RED)
-        {
-            m_redPathList.conflict(co);
-        }
-        if(m_yellowPathList.getCoordinates().contains(co) && color != Color.YELLOW)
-        {
-            m_yellowPathList.conflict(co);
-        }
-        if(m_whitePathList.getCoordinates().contains(co) && color != Color.WHITE)
-        {
-            m_whitePathList.conflict(co);
-        }
-        if(m_bluePathList.getCoordinates().contains(co) && color != Color.BLUE)
-        {
-            m_bluePathList.conflict(co);
-        }*/
     }
 
     //Check what current color is and if the color code isn't the wrong one
@@ -389,70 +302,24 @@ public class Board extends View {
             return true;
         }
 
-        /*if(colorMeTimbers == Color.RED && (colorCode != 'G'  && colorCode != 'Y' && colorCode != 'B' && colorCode != 'W'))
-        {
-
-            return true;
-        }
-        if(colorMeTimbers == Color.GREEN && (colorCode != 'R'  && colorCode != 'Y' && colorCode != 'B' && colorCode != 'W'))
-        {
-            return true;
-        }
-        if(colorMeTimbers == Color.BLUE && (colorCode != 'R'  && colorCode != 'Y' && colorCode != 'G' && colorCode != 'W'))
-        {
-            return true;
-        }
-        if(colorMeTimbers == Color.YELLOW && (colorCode != 'R'  && colorCode != 'G' && colorCode != 'B' && colorCode != 'W'))
-        {
-            return true;
-        }
-        if(colorMeTimbers == Color.WHITE && (colorCode != 'R'  && colorCode != 'Y' && colorCode != 'B' && colorCode != 'G'))
-        {
-            return true;
-        }*/
-
         return false;
     }
     //Prevents us from going from a start point of a color,
     // and then to an endpoint and continuing through it.
     public boolean tooFar(int colorMeTimbers)
     {
-        int redSize = m_redPathList.getCoordinates().size();
-        int greenSize = m_greenPathList.getCoordinates().size();
-        int blueSize = m_bluePathList.getCoordinates().size();
-        int yellowSize = m_yellowPathList.getCoordinates().size();
-        int whiteSize = m_whitePathList.getCoordinates().size();
+        for(Cellpath cellpath: allCellPaths) {
+            if(cellpath.getCoordinates().size() > 1) {
+                Coordinate lastCord = cellpath.getCoordinates().get(cellpath.getCoordinates().size() - 1);
+                if (colorMeTimbers == colorList.get(allCellPaths.indexOf(cellpath)) && cellpath.getCoordinates().size() > 1) {
+                    if (mGlobals.flowCoord.contains(lastCord) && (mGlobals.flowCoord.indexOf(lastCord) / 2) == colorList.indexOf(colorMeTimbers)) {
+                        return true;
+                    }
+                }
+            }
+        }
 
-        if(redSize > 1) {
-            Coordinate lastRed = m_redPathList.getCoordinates().get(redSize - 1);
-            if(colorMeTimbers == Color.RED && getBoard(lastRed.getCol(), lastRed.getRow()) == 'R' && redSize > 1 )
-                return true;
-        }
-       if(greenSize > 1)
-       {
-           Coordinate lastGreen = m_greenPathList.getCoordinates().get(greenSize-1);
-           if(colorMeTimbers == Color.GREEN && getBoard(lastGreen.getCol(), lastGreen.getRow()) == 'G' && greenSize > 1 )
-               return true;
-       }
-        if(blueSize > 1)
-        {
-            Coordinate lastBlue = m_bluePathList.getCoordinates().get(blueSize-1);
-            if(colorMeTimbers == Color.BLUE && getBoard(lastBlue.getCol(), lastBlue.getRow()) == 'B' && blueSize > 1 )
-                return true;
 
-        }
-        if(yellowSize > 1)
-        {
-            Coordinate lastYellow = m_yellowPathList.getCoordinates().get(yellowSize-1);
-            if(colorMeTimbers == Color.YELLOW && getBoard(lastYellow.getCol(), lastYellow.getRow()) == 'Y' && yellowSize > 1 )
-                return true;
-        }
-        if(whiteSize > 1)
-        {
-            Coordinate lastWhite = m_whitePathList.getCoordinates().get(whiteSize-1);
-            if(colorMeTimbers == Color.WHITE && getBoard(lastWhite.getCol(), lastWhite.getRow()) == 'W' && whiteSize > 1 )
-                return true;
-        }
         return false;
     }
     public Paint createPainter(int color)
@@ -469,26 +336,12 @@ public class Board extends View {
 
     public boolean isWin()
     {
-        int totalSize = m_redPathList.getCoordinates().size() + m_greenPathList.getCoordinates().size() + m_bluePathList.getCoordinates().size()
-                + m_whitePathList.getCoordinates().size() + m_yellowPathList.getCoordinates().size();
-
-        int dotSize = 0;
-
+        int totalSize = 0;
         for(Cellpath cellPath: allCellPaths) {
-            for (Coordinate tempCord : m_redPathList.getCoordinates()) {
-
-                if ((getBoard(tempCord.getCol(), tempCord.getRow()) == 'R') ||
-                        (getBoard(tempCord.getCol(),tempCord.getCol()) == 'G') ||
-                        (getBoard(tempCord.getCol(),tempCord.getCol()) == 'B') ||
-                        (getBoard(tempCord.getCol(),tempCord.getCol()) == 'Y') ||
-                        (getBoard(tempCord.getCol(),tempCord.getCol()) == 'W')
-                        ) {
-                    dotSize++;
-                }
-            }
+            totalSize = totalSize + cellPath.getCoordinates().size();
         }
 
-        if((dotSize == allCellPaths.size()*2) && (totalSize == (NUM_CELLS * NUM_CELLS))){
+        if(totalSize == (NUM_CELLS * NUM_CELLS)){
             return true;
         }
 

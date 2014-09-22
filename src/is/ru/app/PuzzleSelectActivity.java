@@ -29,19 +29,25 @@ public class PuzzleSelectActivity extends ListActivity{
         private int size;
         private String flows;
         private int id;
+        private String name;
+        private String challengeName;
 
-        Puzzle(int mSize, String mFlows, int mId){
+        Puzzle(int mSize, String mFlows, int mId, String mName, String mChallengeName){
             size = mSize;
             flows = mFlows;
             id = mId;
+            name = mName;
+            challengeName = mChallengeName;
         }
 
         int getSize(){ return size;}
         String getFlows() {return flows;}
         int getId() {return id;}
+        String getName() {return name;}
+        String getChallengeName() {return challengeName;}
 
         public String toString(){
-            return "Puzzle no. " + getId();
+            return getChallengeName() + " - " + getName();
         }
     }
 
@@ -64,7 +70,7 @@ public class PuzzleSelectActivity extends ListActivity{
         }
 
         for(Puzzle puzzle: mPuzzles) {
-            puzzleList.add(new Puzzle(puzzle.getSize(),puzzle.getFlows(),puzzle.getId()));
+            puzzleList.add(new Puzzle(puzzle.getSize(),puzzle.getFlows(),puzzle.getId(), puzzle.getName(), puzzle.getChallengeName()));
         }
 
         ArrayAdapter<Puzzle> adapter = new ArrayAdapter<Puzzle>(
@@ -78,6 +84,7 @@ public class PuzzleSelectActivity extends ListActivity{
         Puzzle selectedPuzzle = (Puzzle) l.getAdapter().getItem(position);
 
         mGlobals.flowCoord = flowList(selectedPuzzle);
+        mGlobals.mSize = selectedPuzzle.getSize();
 
         startActivity(new Intent(this, PlayActivity.class));
     }
@@ -107,19 +114,27 @@ public class PuzzleSelectActivity extends ListActivity{
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse( is );
-            NodeList nList = doc.getElementsByTagName( "puzzle" );
+            NodeList nList = doc.getElementsByTagName( "challenge" );
             for ( int c=0; c<nList.getLength(); ++c ) {
                 Node nNode = nList.item(c);
                  if ( nNode.getNodeType() == Node.ELEMENT_NODE ) {
-                    NodeList nList2 =  nNode.getChildNodes();
-                   // for(int i = 0; i < nList2.getLength(); ++i) {
-                        Element eNode = (Element) nNode;
-                        String size = eNode.getElementsByTagName("size").item(0).getFirstChild().getNodeValue();
-                        String flows = eNode.getElementsByTagName("flows").item(0).getFirstChild().getNodeValue();
-                        int id = c+1;
 
-                        puzzles.add(new Puzzle(Integer.parseInt(size), flows, id));
-                    //}
+
+                        Element eNode = (Element) nNode;
+                        NodeList nList2 =  eNode.getElementsByTagName("puzzle");
+                        String challengeName = ((Element) nNode).getAttribute("name");
+                        for(int i = 0; i<nList2.getLength();++i) {
+                            Node tempNode = nList2.item(i);
+
+                            if ( nNode.getNodeType() == Node.ELEMENT_NODE ) {
+                                Element eNodetmp = (Element) tempNode;
+                                String size = eNodetmp.getElementsByTagName("size").item(0).getFirstChild().getNodeValue();
+                                String flows = eNodetmp.getElementsByTagName("flows").item(0).getFirstChild().getNodeValue();
+                                String name = eNodetmp.getAttribute("id");
+                                int id = c + 1;
+                                puzzles.add(new Puzzle(Integer.parseInt(size), flows, id, name, challengeName));
+                            }
+                        }
                 }
             }
         }
