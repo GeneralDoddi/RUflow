@@ -3,6 +3,7 @@ package is.ru.app;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -33,6 +34,9 @@ public class PuzzleSelectActivity extends Activity{
 
         List<Puzzle> mPuzzles = new ArrayList<Puzzle>();
 
+        FlowDbAdapter fa = new FlowDbAdapter(this);
+
+
         super.onCreate(savedInstanceState);
 
         try {
@@ -46,7 +50,16 @@ public class PuzzleSelectActivity extends Activity{
 
         for(Puzzle puzzle: mPuzzles) {
             puzzleList.add(new Puzzle(puzzle.getSize(),puzzle.getFlows(),puzzle.getId(), puzzle.getName(), puzzle.getChallengeName()));
+            Cursor c = fa.queryFlows(puzzle.getId(),puzzle.getChallengeName());
+            if(c.moveToFirst()){
+
+            }
+            else{
+                fa.insertFlow(puzzle.getId(),null,puzzle.getChallengeName(),false);
+            }
+
         }
+        fa.close();
 
         ArrayAdapter<Puzzle> adapter = new ArrayAdapter<Puzzle>(
                 this, android.R.layout.simple_expandable_list_item_1, puzzleList);

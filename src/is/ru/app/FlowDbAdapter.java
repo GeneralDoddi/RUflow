@@ -81,7 +81,7 @@ public class FlowDbAdapter {
     public Cursor queryFlows(int id, String type) {
         openToRead();
         Cursor cursor = db.query( DbHelper.TableFlow,
-                DbHelper.TableFlowCols, "type =" + type + " AND boardId =" + id, null  , null, null, null);
+                DbHelper.TableFlowCols, "type LIKE '" + type + "' AND boardId = " + id, null  , null, null, null);
         return cursor;
     }
 

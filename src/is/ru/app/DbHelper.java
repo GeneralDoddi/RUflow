@@ -19,7 +19,7 @@ public class DbHelper extends SQLiteOpenHelper {
             "CREATE TABLE flow(" +
                     " _id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     " boardId INTEGER NOT NULL," +
-                    " type TEXT NOT NULL" +
+                    " type TEXT NOT NULL," +
                     " bestTime DATETIME," +
                     " finished BOOLEAN DEFAULT FALSE " +
                     ");";
