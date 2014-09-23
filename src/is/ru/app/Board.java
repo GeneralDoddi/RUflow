@@ -49,13 +49,6 @@ public class Board extends View {
 
     private ArrayList<Integer> colorList = new ArrayList<Integer>();
 
-    // Cellpath array to keep all paths
-    private Cellpath m_redPathList = new Cellpath();
-    private Cellpath m_greenPathList = new Cellpath();
-    private Cellpath m_bluePathList = new Cellpath();
-    private Cellpath m_yellowPathList = new Cellpath();
-    private Cellpath m_whitePathList = new Cellpath();
-
     private int colorMeTimbers = 0;
 
     //Predefined 4 litir
@@ -85,11 +78,10 @@ public class Board extends View {
 
         m_paintPath = createPainter(Color.RED);
 
-        allCellPaths.add(m_redPathList);
-        allCellPaths.add(m_greenPathList);
-        allCellPaths.add(m_bluePathList);
-        allCellPaths.add(m_yellowPathList);
-        allCellPaths.add(m_whitePathList);
+        for(int i = 0; i < mGlobals.flowCoord.size(); i++){
+            Cellpath newPath = new Cellpath();
+            allCellPaths.add(newPath);
+        }
 
 
         colorList.add(Color.RED);
@@ -121,13 +113,6 @@ public class Board extends View {
         m_cellWidth  = (xNew - getPaddingLeft() - getPaddingRight() - sw) / NUM_CELLS;
         m_cellHeight = (yNew - getPaddingTop() - getPaddingBottom() - sw) / NUM_CELLS;
     }
-
-    //Stadsetning fyrir punkta a mappinu
-   /* public char getBoard( int col, int row ) {
-        return m_board.charAt(col + row * NUM_CELLS);
-    }*/
-
-
 
     @Override
     protected void onDraw( Canvas canvas ) {
@@ -185,7 +170,7 @@ public class Board extends View {
                     m_path.lineTo(colToX(co.getCol()) + m_cellWidth / 2,
                             rowToY(co.getRow()) + m_cellHeight / 2);
                 }
-                //System.out.println(allCellPaths.indexOf(tempPath));
+
                 canvas.drawPath( m_path, createPainter(colorList.get(allCellPaths.indexOf(tempPath))));
             }
         }
@@ -203,7 +188,6 @@ public class Board extends View {
         int y = (int) event.getY();
         int c = xToCol( x );
         int r = yToRow( y );
-        int arraySlot = 0;
 
         if ( c >= NUM_CELLS || r >= NUM_CELLS ) {
             return true;
@@ -211,22 +195,19 @@ public class Board extends View {
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
-
-
                 // WORK IN PROGRESS, NEEDS FIXING!
                 Coordinate tempCord = new Coordinate(c, r);
                 //Finna hvort þetta sé upphafspunktur
                 int found = mGlobals.flowCoord.indexOf(tempCord);
-                System.out.println("Flow - "+found);
+
                 if (found == -1) {
 
                     for (Cellpath i : allCellPaths) {
                         if (i.getCoordinates().contains(tempCord)) {
-                            System.out.println("IM LOOKING FOR JESUS");
                             found = allCellPaths.indexOf(i);
                         }
                     }
-                    System.out.println("Nonflow - " + found);
+
                 }
 
 
@@ -242,7 +223,7 @@ public class Board extends View {
                         m_paintPath.setColor(colorList.get(allCellPaths.indexOf(tempPath)));
                         colorMeTimbers = colorList.get(allCellPaths.indexOf(tempPath));
                         tempPath.append(tempCord);
-                        System.out.println("Added - " + tempCord.getCol() + "," + tempCord.getRow());
+
                     }
                 }
 
@@ -263,7 +244,7 @@ public class Board extends View {
                         if (areNeighbours(last.getCol(), last.getRow(), c, r)) {
                             allCellPaths.get(colorList.indexOf(colorMeTimbers)).append(tempCord);
                             invalidate();
-                            System.out.println("Added - " + tempCord.getCol() + "," + tempCord.getRow());
+
                         }
                     }
                 }
