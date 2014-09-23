@@ -26,29 +26,8 @@ public class SelectActivity extends ListActivity {
 
     private Global mGlobals = Global.getInstance();
 
-    public class MapPacks{
 
-        private String name;
-        private String description;
-        private String file;
-
-
-        MapPacks(String mName, String mDescription, String mFile){
-            name = mName;
-            description = mDescription;
-            file = mFile;
-        }
-
-        String getName(){return name;}
-        String getDescription(){return description;}
-        String getFile(){return file;}
-
-        public String toString(){
-            return "" + getName() + " : " + getDescription();
-        }
-    }
-
-    ArrayList<MapPacks> challengeList = new ArrayList<MapPacks>();
+    ArrayList<MapPack> challengeList = new ArrayList<MapPack>();
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -67,10 +46,10 @@ public class SelectActivity extends ListActivity {
         }
 
         for(Pack pack: mPacks) {
-            challengeList.add(new MapPacks(pack.getName(),pack.getDescription(),pack.getFile()));
+            challengeList.add(new MapPack(pack.getName(),pack.getDescription(),pack.getFile()));
         }
 
-        ArrayAdapter<MapPacks> adapter = new ArrayAdapter<MapPacks>(
+        ArrayAdapter<MapPack> adapter = new ArrayAdapter<MapPack>(
                 this, android.R.layout.simple_expandable_list_item_1, challengeList);
 
         setListAdapter (adapter);
@@ -78,9 +57,9 @@ public class SelectActivity extends ListActivity {
 
     @Override
     protected void onListItemClick( ListView l, View v, int position, long id){
-        MapPacks mapElement = (MapPacks) l.getAdapter().getItem(position);
+        MapPack mapElement = (MapPack) l.getAdapter().getItem(position);
 
-        mGlobals.packSelect = mapElement.file;
+        mGlobals.packSelect = mapElement.getFile();
 
 
         startActivity(new Intent( this, PuzzleSelectActivity.class));

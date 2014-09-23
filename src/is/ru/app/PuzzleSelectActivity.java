@@ -1,11 +1,11 @@
 package is.ru.app;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,36 +20,11 @@ import java.util.List;
 /**
  * Created by Þórður on 15.9.2014.
  */
-public class PuzzleSelectActivity extends ListActivity{
+public class PuzzleSelectActivity extends Activity{
 
     private Global mGlobals = Global.getInstance();
 
-    public class Puzzle {
 
-        private int size;
-        private String flows;
-        private int id;
-        private String name;
-        private String challengeName;
-
-        Puzzle(int mSize, String mFlows, int mId, String mName, String mChallengeName){
-            size = mSize;
-            flows = mFlows;
-            id = mId;
-            name = mName;
-            challengeName = mChallengeName;
-        }
-
-        int getSize(){ return size;}
-        String getFlows() {return flows;}
-        int getId() {return id;}
-        String getName() {return name;}
-        String getChallengeName() {return challengeName;}
-
-        public String toString(){
-            return getChallengeName() + " - " + getName();
-        }
-    }
 
     ArrayList<Puzzle> puzzleList = new ArrayList<Puzzle>();
 
@@ -76,10 +51,27 @@ public class PuzzleSelectActivity extends ListActivity{
         ArrayAdapter<Puzzle> adapter = new ArrayAdapter<Puzzle>(
                 this, android.R.layout.simple_expandable_list_item_1, puzzleList);
 
-        setListAdapter (adapter);
+        setContentView(R.layout.puzzlesel);
+
+        GridView gridView = (GridView) findViewById(R.id.gridview);
+        gridView.setAdapter(adapter);
+        //setListAdapter (adapter);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                Puzzle selectedPuzzle = (Puzzle) parent.getAdapter().getItem(position);
+
+                mGlobals.flowCoord = flowList(selectedPuzzle);
+                mGlobals.mSize = selectedPuzzle.getSize();
+
+                startActivity(new Intent(getApplicationContext(), PlayActivity.class));
+            }
+        });
+
+
     }
 
-    @Override
+    /*@Override
     protected void onListItemClick( ListView l, View v, int position, long id){
         Puzzle selectedPuzzle = (Puzzle) l.getAdapter().getItem(position);
 
@@ -87,7 +79,7 @@ public class PuzzleSelectActivity extends ListActivity{
         mGlobals.mSize = selectedPuzzle.getSize();
 
         startActivity(new Intent(this, PlayActivity.class));
-    }
+    }*/
 
     private ArrayList<Coordinate> flowList(Puzzle selectedPuzzle){
 

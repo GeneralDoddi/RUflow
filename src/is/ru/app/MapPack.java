@@ -5,17 +5,24 @@ import java.util.List;
 /**
  * Created by Þórður on 15.9.2014.
  */
-public class MapPack {
+public class MapPack{
 
-    private List<Puzzle> puzzleList;
+    private String name;
+    private String description;
+    private String file;
 
 
-
-    MapPack( List<Puzzle> puzzlelist )  {
-        puzzleList = puzzlelist;
+    MapPack(String mName, String mDescription, String mFile){
+        name = mName;
+        description = mDescription;
+        file = mFile;
     }
 
-    List<Puzzle> getPuzzleList(){
-        return puzzleList;
+    String getName(){return name;}
+    String getDescription(){return description;}
+    String getFile(){return file;}
+
+    public String toString(){
+        return "" + getName() + " : " + getDescription();
     }
 }

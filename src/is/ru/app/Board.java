@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.*;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,6 +24,28 @@ import android.widget.Toast;
 
 
 public class Board extends View {
+
+    //Timer
+    TextView timerTextView;
+    TextView bestTimeView;
+    long startTime = 0;
+
+    Handler timerHandler = new Handler();
+    Runnable timerRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            long millis = System.currentTimeMillis() - startTime;
+            int seconds = (int) (millis / 1000);
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+
+            timerTextView.setText(String.format("%d:%02d:%02d", minutes, seconds, millis));
+
+            timerHandler.postDelayed(this, 500);
+
+        }
+    };
 
 
     private Global mGlobals = Global.getInstance();
@@ -94,6 +118,8 @@ public class Board extends View {
         colorList.add(Color.MAGENTA);
         colorList.add(Color.BLACK);
         colorList.add(Color.DKGRAY);
+
+        timerTextView =  (TextView) findViewById(R.id.gameTimer);
 
     }
 
