@@ -8,16 +8,28 @@ import java.util.List;
 public class Puzzle {
 
     private int size;
-    private List<String> flows;
+    private String flows;
+    private int id;
+    private String name;
+    private String challengeName;
 
-    Puzzle(int mSize, List<String> mFlows){
+    Puzzle(int mSize, String mFlows, int mId, String mName, String mChallengeName){
         size = mSize;
         flows = mFlows;
+        id = mId;
+        name = mName;
+        challengeName = mChallengeName;
     }
 
     int getSize(){ return size;}
-    List<String> getFlows() {return flows;}
+    String getFlows() {return flows;}
+    int getId() {return id;}
+    String getName() {return name;}
+    String getChallengeName() {return challengeName;}
 
+    public String toString(){
+        return getChallengeName() + " - " + getName();
+    }
 }
 /*
 <puzzle id="1">

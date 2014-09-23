@@ -4,32 +4,62 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="68dp">
+
+        <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Menu"
+                android:id="@+id/menu"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/levelName"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/bestTime"
+                android:layout_alignBottom="@+id/levelName"
+                android:layout_toLeftOf="@+id/menu"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Best:"
+                android:id="@+id/bestTitle"
+                android:layout_alignTop="@+id/bestTime"
+                android:layout_toLeftOf="@+id/bestTime"
+                android:layout_marginRight="15dp"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/gameTimer"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
     <is.ru.app.Board
             android:id="@+id/board"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#444444"
-            />
-
-    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Reset"
-            android:onClick="buttonClick"
-            android:id="@+id/play_again"/>
-    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="PLAY SOUND"
-            android:onClick="playSound"
-            android:id="@+id/play"
-           />
-    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pause sound"
-            android:onClick="pauseSound"
-            android:id="@+id/pause"
             />
 
 </LinearLayout>
