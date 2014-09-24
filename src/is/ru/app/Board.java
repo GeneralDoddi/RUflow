@@ -223,7 +223,7 @@ public class Board extends View {
 
 
             else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                PlayActivity.moveSound();
+
                 Coordinate tempCord = new Coordinate(c , r);
 
 
@@ -243,6 +243,7 @@ public class Board extends View {
                     }
                 }
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                PlayActivity.moveSound();
                // m_cellPath = new Cellpath();
                 if(isWin()){
                     PlayActivity.stopTimer();

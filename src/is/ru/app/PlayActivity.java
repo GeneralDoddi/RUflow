@@ -3,6 +3,7 @@ package is.ru.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -65,15 +66,39 @@ public class PlayActivity extends Activity {
         int color = settings.getInt("pathColor", Color.CYAN);
         Board board = (Board) findViewById(R.id.board);
         board.setColor(color);
+        //Reset time
+        gameTime = 0;
 
-
+        //Get current level
         Puzzle current = mGlobals.puzzlePack.get(mGlobals.selectedPuzzle);
+        //Set level name
+        TextView name = (TextView) findViewById(R.id.levelName);
+        name.setText(current.getChallengeName() + " : " + current.getName());
+
+        //get level data
+        Cursor c = mGlobals.fa.queryFlows(Integer.parseInt(current.getName()),current.getChallengeName());
+        if(c.moveToFirst()) {
+
+            double timeFromDB = c.getDouble(3);
+            String test4 = c.getString(4);
+            System.out.println("Time: "+  timeFromDB + " Finished: " +test4);
+
+            int minut;
+            int secunde;
+            int millisecunde;
+
+            secunde = (int) timeFromDB / 1000;
+            millisecunde = (int) timeFromDB % 1000;
+            minut = secunde / 60;
+
+            TextView bestTime = (TextView) findViewById(R.id.bestTime);
+            String best = String.format("%02d:%02d:%02d", minut, secunde,millisecunde);
+            bestTime.setText(best);
+        }
         //Timer
         time = (TextView) findViewById(R.id.gameTimer);
 
-        TextView name = (TextView) findViewById(R.id.levelName);
 
-        name.setText(current.getName());
         //Load sounds
         soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
