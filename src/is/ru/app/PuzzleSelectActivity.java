@@ -52,7 +52,7 @@ public class PuzzleSelectActivity extends Activity{
         for(Puzzle puzzle: mPuzzles) {
             puzzleList.add(new Puzzle(puzzle.getSize(), puzzle.getFlows(), puzzle.getId(), puzzle.getName(), puzzle.getChallengeName()));
             Cursor c = mGlobals.fa.queryFlows(Integer.parseInt(puzzle.getName()),puzzle.getChallengeName());
-            System.out.println("what");
+
             if(c.moveToFirst()){
 
                 String test0 = c.getString(0);

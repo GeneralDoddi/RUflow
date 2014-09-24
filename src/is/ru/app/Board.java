@@ -243,7 +243,7 @@ public class Board extends View {
                     }
                 }
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                PlayActivity.moveSound();
+                //PlayActivity.moveSound();
                // m_cellPath = new Cellpath();
                 if(isWin()){
                     PlayActivity.stopTimer();
@@ -286,11 +286,20 @@ public class Board extends View {
         //
         int index = colorList.indexOf(colorMeTimbers);
 
-        if(mGlobals.flowCoord.indexOf(co) != index / 2){
+        int found = mGlobals.flowCoord.indexOf(co);
+
+        System.out.println("Index: " + index + " found/2: " + found/2);
+        if(found == -1 || found/2 == index)
+        {
+
             return true;
         }
+        else
+        {
 
-        return false;
+            return false;
+        }
+
     }
     //Prevents us from going from a start point of a color,
     // and then to an endpoint and continuing through it.
