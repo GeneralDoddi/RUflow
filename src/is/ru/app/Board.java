@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -245,6 +247,15 @@ public class Board extends View {
                 if(isWin()){
                     PlayActivity.stopTimer();
                     PlayActivity.winSound();
+
+                    mGlobals.fa.openToWrite();
+                    mGlobals.fa.updateFlowFinished(
+                            mGlobals.puzzlePack.get(mGlobals.selectedPuzzle).getId(),
+                            mGlobals.puzzlePack.get(mGlobals.selectedPuzzle).getChallengeName(),
+                            PlayActivity.getGameTime(),
+                            true);
+                    mGlobals.fa.close();
+
                     Toast.makeText(getContext(),"You Win!", Toast.LENGTH_SHORT).show();
                 }
             }

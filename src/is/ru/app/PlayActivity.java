@@ -26,6 +26,8 @@ import java.util.TimerTask;
  */
 public class PlayActivity extends Activity {
 
+    //GLOBAL DOODA
+    private Global mGlobals = Global.getInstance();
     //Sound
     private static SoundPool soundPool;
     private static int soundID;
@@ -35,15 +37,15 @@ public class PlayActivity extends Activity {
     static boolean playing = false;
 
     //Timer
-    private static double i = 0;
+    private static double gameTime = 0;
     private static TextView time;
     final static Handler handler = new Handler();
     private static Timer myTimer;
 
     final static Runnable runner = new Runnable() {
         public void run(){
-            int seconds = (int) i / 1000;
-            int millis =  (int) i % 1000;
+            int seconds = (int) gameTime / 1000;
+            int millis =  (int) gameTime % 1000;
             int minutes = seconds / 60;
             seconds = seconds - minutes * 60;
             String shiz = String.format("%02d:%02d:%02d", minutes, seconds,millis);
@@ -64,22 +66,24 @@ public class PlayActivity extends Activity {
         Board board = (Board) findViewById(R.id.board);
         board.setColor(color);
 
+
+        Puzzle current = mGlobals.puzzlePack.get(mGlobals.selectedPuzzle);
+        //Timer
         time = (TextView) findViewById(R.id.gameTimer);
 
+        TextView name = (TextView) findViewById(R.id.levelName);
+
+        name.setText(current.getName());
         //Load sounds
         soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
-
         soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
                 loaded = true;
             }
         });
-
-
         soundID = soundPool.load(this, R.raw.pisssss, 1);
         soundID2 = soundPool.load(this, R.raw.sturt, 1);
-
         AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         float actualVolume = (float) audioManager
                 .getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -108,6 +112,11 @@ public class PlayActivity extends Activity {
 
     }
 
+    public static double getGameTime() {
+
+        return gameTime;
+    }
+
 
     public static void startTimer()
     {
@@ -124,7 +133,7 @@ public class PlayActivity extends Activity {
         myTimer.purge();
     }
     private static void UpdateGUI() {
-        i += 1;
+        gameTime += 1;
         handler.post(runner);
     }
 }
