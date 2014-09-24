@@ -41,4 +41,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL( sqlDropTableFlow );
         onCreate( db );
     }
+
+    public void recreate(SQLiteDatabase db){
+        db.execSQL( sqlDropTableFlow );
+        onCreate( db );
+    }
 }

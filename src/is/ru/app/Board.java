@@ -278,7 +278,7 @@ public class Board extends View {
                // m_cellPath = new Cellpath();
                 if(isWin()){
                     mGlobals.fa.openToWrite();
-                    mGlobals.fa.updateFlowFinished(mGlobals.puzzlePack.get(mGlobals.selectedPuzzle).getId(), mGlobals.puzzlePack.get(mGlobals.selectedPuzzle).getChallengeName(), true);
+                    mGlobals.fa.updateFlowFinished(Integer.parseInt(mGlobals.puzzlePack.get(mGlobals.selectedPuzzle).getName()), mGlobals.puzzlePack.get(mGlobals.selectedPuzzle).getChallengeName(), true);
                     mGlobals.fa.close();
                     Toast.makeText(getContext(),"You Win!", Toast.LENGTH_SHORT).show();
                 }

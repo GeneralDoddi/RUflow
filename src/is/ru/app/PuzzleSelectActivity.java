@@ -36,6 +36,7 @@ public class PuzzleSelectActivity extends Activity{
 
         //FlowDbAdapter fa = new FlowDbAdapter(this);
         mGlobals.fa = new FlowDbAdapter(this);
+       // mGlobals.fa.dbHelper.recreate(mGlobals.fa.db);
 
         super.onCreate(savedInstanceState);
 
@@ -51,7 +52,7 @@ public class PuzzleSelectActivity extends Activity{
         for(Puzzle puzzle: mPuzzles) {
             puzzleList.add(new Puzzle(puzzle.getSize(), puzzle.getFlows(), puzzle.getId(), puzzle.getName(), puzzle.getChallengeName()));
             Cursor c = mGlobals.fa.queryFlows(Integer.parseInt(puzzle.getName()),puzzle.getChallengeName());
-
+            System.out.println("what");
             if(c.moveToFirst()){
 
                 String test0 = c.getString(0);
@@ -65,7 +66,7 @@ public class PuzzleSelectActivity extends Activity{
                 }
             }
             else{
-                mGlobals.fa.insertFlow(puzzle.getId(),null,puzzle.getChallengeName(),false);
+                mGlobals.fa.insertFlow(Integer.parseInt(puzzle.getName()),null,puzzle.getChallengeName(),false);
             }
 
         }
