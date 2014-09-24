@@ -79,9 +79,10 @@ public class PlayActivity extends Activity {
         Cursor c = mGlobals.fa.queryFlows(Integer.parseInt(current.getName()),current.getChallengeName());
         if(c.moveToFirst()) {
 
+
             double timeFromDB = c.getDouble(3);
-            String test4 = c.getString(4);
-            System.out.println("Time: "+  timeFromDB + " Finished: " +test4);
+            double fin = c.getDouble(4);
+            System.out.println("Time: "+  timeFromDB + " Finished: " +fin);
 
             int minut;
             int secunde;
@@ -93,7 +94,9 @@ public class PlayActivity extends Activity {
 
             TextView bestTime = (TextView) findViewById(R.id.bestTime);
             String best = String.format("%02d:%02d:%02d", minut, secunde,millisecunde);
-            bestTime.setText(best);
+            if(fin == 1) {
+                bestTime.setText(best);
+            }
         }
         //Timer
         time = (TextView) findViewById(R.id.gameTimer);

@@ -248,7 +248,7 @@ public class Board extends View {
                 if(isWin()){
                     PlayActivity.stopTimer();
                     PlayActivity.winSound();
-
+                    System.out.println(mGlobals.selectedPuzzle);
                     mGlobals.fa.openToWrite();
                     mGlobals.fa.updateFlowFinished(
                             Integer.parseInt(mGlobals.puzzlePack.get(mGlobals.selectedPuzzle).getName()),
