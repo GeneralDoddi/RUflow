@@ -277,6 +277,9 @@ public class Board extends View {
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                // m_cellPath = new Cellpath();
                 if(isWin()){
+                    mGlobals.fa.openToWrite();
+                    mGlobals.fa.updateFlowFinished(mGlobals.puzzlePack.get(mGlobals.selectedPuzzle).getId(), mGlobals.puzzlePack.get(mGlobals.selectedPuzzle).getChallengeName(), true);
+                    mGlobals.fa.close();
                     Toast.makeText(getContext(),"You Win!", Toast.LENGTH_SHORT).show();
                 }
             }

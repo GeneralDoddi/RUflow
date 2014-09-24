@@ -65,14 +65,14 @@ public class FlowDbAdapter {
         return value;
     }
 
-    public long updateFlowFinished( long id, boolean finished ) {
+    public long updateFlowFinished( int id, String type, boolean finished ) {
         String[] cols = DbHelper.TableFlowCols;
         ContentValues contentValues = new ContentValues();
         contentValues.put( cols[4], finished);
         openToWrite();
         long value = db.update(DbHelper.TableFlow,
                 contentValues,
-                cols[0] + "=" + id, null );
+                "type LIKE '" + type + "' AND boardId = " + id, null );
         close();
         return value;
     }

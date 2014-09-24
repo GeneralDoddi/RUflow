@@ -34,8 +34,8 @@ public class PuzzleSelectActivity extends Activity{
 
         List<Puzzle> mPuzzles = new ArrayList<Puzzle>();
 
-        FlowDbAdapter fa = new FlowDbAdapter(this);
-
+        //FlowDbAdapter fa = new FlowDbAdapter(this);
+        mGlobals.fa = new FlowDbAdapter(this);
 
         super.onCreate(savedInstanceState);
 
@@ -49,20 +49,31 @@ public class PuzzleSelectActivity extends Activity{
         }
 
         for(Puzzle puzzle: mPuzzles) {
-            puzzleList.add(new Puzzle(puzzle.getSize(),puzzle.getFlows(),puzzle.getId(), puzzle.getName(), puzzle.getChallengeName()));
-            Cursor c = fa.queryFlows(puzzle.getId(),puzzle.getChallengeName());
+            puzzleList.add(new Puzzle(puzzle.getSize(), puzzle.getFlows(), puzzle.getId(), puzzle.getName(), puzzle.getChallengeName()));
+            Cursor c = mGlobals.fa.queryFlows(Integer.parseInt(puzzle.getName()),puzzle.getChallengeName());
+
             if(c.moveToFirst()){
 
+                String test0 = c.getString(0);
+                String test  = c.getString(1);
+                String test2 = c.getString(2);
+                String test3 = c.getString(3);
+                String test4 = c.getString(4);
+                System.out.println(test0 + " " + test + " " + test2 + " " + test3 + " " +test4);
+                if(test.contains("0") && mPuzzles.indexOf(puzzle) == 0){
+                    System.out.println(test);
+                }
             }
             else{
-                fa.insertFlow(puzzle.getId(),null,puzzle.getChallengeName(),false);
+                mGlobals.fa.insertFlow(puzzle.getId(),null,puzzle.getChallengeName(),false);
             }
 
         }
-        fa.close();
+        mGlobals.fa.close();
+        mGlobals.puzzlePack = puzzleList;
 
         ArrayAdapter<Puzzle> adapter = new ArrayAdapter<Puzzle>(
-                this, android.R.layout.simple_expandable_list_item_1, puzzleList);
+                this, android.R.layout.simple_expandable_list_item_1, mGlobals.puzzlePack);
 
         setContentView(R.layout.puzzlesel);
 
@@ -73,7 +84,7 @@ public class PuzzleSelectActivity extends Activity{
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Puzzle selectedPuzzle = (Puzzle) parent.getAdapter().getItem(position);
-
+                mGlobals.selectedPuzzle = mGlobals.puzzlePack.indexOf(selectedPuzzle);
                 mGlobals.flowCoord = flowList(selectedPuzzle);
                 mGlobals.mSize = selectedPuzzle.getSize();
 
@@ -93,6 +104,7 @@ public class PuzzleSelectActivity extends Activity{
 
         startActivity(new Intent(this, PlayActivity.class));
     }*/
+
 
     private ArrayList<Coordinate> flowList(Puzzle selectedPuzzle){
 

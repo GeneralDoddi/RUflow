@@ -1,5 +1,6 @@
 package is.ru.app;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,6 +12,9 @@ public class Global {
     public String packSelect;
     public List<Coordinate> flowCoord;
     public int mSize;
+    public ArrayList<Puzzle> puzzlePack;
+    public int selectedPuzzle;
+    public FlowDbAdapter fa;
 
     ///
     private static Global mInstance = new Global();
