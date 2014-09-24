@@ -23,6 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="LEVEL"
                 android:id="@+id/levelName"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"/>
@@ -31,6 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="00:00:00"
                 android:id="@+id/bestTime"
                 android:layout_alignBottom="@+id/levelName"
                 android:layout_toLeftOf="@+id/menu"/>
@@ -49,8 +51,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="00:00:00"
                 android:id="@+id/gameTimer"
-                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/bestTitle"
                 android:layout_centerHorizontal="true"/>
 
     </RelativeLayout>

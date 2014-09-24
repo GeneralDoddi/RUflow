@@ -65,10 +65,11 @@ public class FlowDbAdapter {
         return value;
     }
 
-    public long updateFlowFinished( int id, String type, boolean finished ) {
+    public long updateFlowFinished( int id, String type, double bestTime, boolean finished ) {
         String[] cols = DbHelper.TableFlowCols;
         ContentValues contentValues = new ContentValues();
         contentValues.put( cols[4], finished);
+        contentValues.put(cols[3], bestTime);
         openToWrite();
         long value = db.update(DbHelper.TableFlow,
                 contentValues,
