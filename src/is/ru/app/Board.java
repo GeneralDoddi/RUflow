@@ -4,60 +4,26 @@ import android.content.Context;
 import android.graphics.*;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/* sound shit */
 
-import android.media.AudioManager;
-import android.media.SoundPool;
-import android.media.SoundPool.OnLoadCompleteListener;
-import android.widget.Toast;
 
 
 public class Board extends View {
 
-    //Timer
-    TextView timerTextView;
-    TextView bestTimeView;
-    long startTime = 0;
-
-    Handler timerHandler = new Handler();
-    Runnable timerRunnable = new Runnable() {
-
-        @Override
-        public void run() {
-            long millis = System.currentTimeMillis() - startTime;
-            int seconds = (int) (millis / 1000);
-            int minutes = seconds / 60;
-            seconds = seconds % 60;
-
-            timerTextView.setText(String.format("%d:%02d:%02d", minutes, seconds, millis));
-
-            timerHandler.postDelayed(this, 500);
-
-        }
-    };
-
-
+    //timer
+    private boolean timeStarted = false;
     private Global mGlobals = Global.getInstance();
 
     private final int NUM_CELLS = mGlobals.mSize;
     private int m_cellWidth;
     private int m_cellHeight;
-
-    // Tilraun ad bordi med 2 raudum punktum
-    //private String m_board = "R.G.Y..B.W......G.Y..RBW.";
-    // "R.G.Y..B.O......G.Y..R.B.O.;
-
 
     // Nytt shape fyrir hring
     private ShapeDrawable m_shape = new ShapeDrawable( new OvalShape());
@@ -74,9 +40,6 @@ public class Board extends View {
     private ArrayList<Integer> colorList = new ArrayList<Integer>();
 
     private int colorMeTimbers = 0;
-
-    //Predefined 4 litir
-
 
     private int xToCol( int x ) {
         return (x - getPaddingLeft()) / m_cellWidth;
@@ -118,8 +81,6 @@ public class Board extends View {
         colorList.add(Color.MAGENTA);
         colorList.add(Color.BLACK);
         colorList.add(Color.DKGRAY);
-
-        timerTextView =  (TextView) findViewById(R.id.gameTimer);
 
     }
 
@@ -220,6 +181,11 @@ public class Board extends View {
         }
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if(!timeStarted)
+                {
+                    PlayActivity.startTimer();
+                    timeStarted = true;
+                }
 
                 // WORK IN PROGRESS, NEEDS FIXING!
                 Coordinate tempCord = new Coordinate(c, r);
@@ -255,7 +221,7 @@ public class Board extends View {
 
 
             else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-
+                PlayActivity.moveSound();
                 Coordinate tempCord = new Coordinate(c , r);
 
 
@@ -277,6 +243,8 @@ public class Board extends View {
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                // m_cellPath = new Cellpath();
                 if(isWin()){
+                    PlayActivity.stopTimer();
+                    PlayActivity.winSound();
                     Toast.makeText(getContext(),"You Win!", Toast.LENGTH_SHORT).show();
                 }
             }
