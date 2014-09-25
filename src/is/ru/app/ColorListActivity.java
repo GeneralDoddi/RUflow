@@ -1,12 +1,14 @@
 package is.ru.app;
 
+import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,64 +16,44 @@ import java.util.List;
 /**
  * Created by Þórður on 9.9.2014.
  */
-public class ColorListActivity extends ListActivity {
+public class ColorListActivity extends Activity {
 
-    public class ColorElement {
-        private int color;
-        private String message;
-
-        ColorElement( int col, String m){
-            color = col;
-            message = m;
-        }
-        int getColor(){
-            return color;
-        }
-        String getMessage(){
-            return message;
-        }
-
-        public String toString(){
-            return "" + colorStr(color) + " : " + message;
-        }
-
-        private String colorStr( int color ){
-            String str = "?";
-            switch (color){
-                case Color.GREEN:
-                    str = "Green";
-                    break;
-                case Color.RED:
-                    str = "Red";
-                    break;
-            }
-            return str;
-        }
-    }
-
-    private List<ColorElement> mList = new ArrayList<ColorElement>();
 
     @Override
     public void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
 
-        mList.add( new ColorElement(Color.GREEN, "Frog"));
-        mList.add( new ColorElement(Color.RED, "Strawberry"));
-
-        ArrayAdapter<ColorElement> adapter = new ArrayAdapter<ColorElement>(
-            this, android.R.layout.simple_expandable_list_item_1, mList);
-
-        setListAdapter (adapter);
+        setContentView(R.layout.settings);
     }
 
-    @Override
-    protected void onListItemClick( ListView l, View v, int position, long id){
-        ColorElement colorElement = (ColorElement) l.getAdapter().getItem(position);
+    public void buttonClick(View v)
+    {
+        Switch b = (Switch) findViewById(R.id.sound);
 
-        SharedPreferences settings = getSharedPreferences( "ColorPref", MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt ("pathColor", colorElement.getColor());
-        editor.commit();
+        System.out.println(b.isChecked());
+        if(b.isChecked())
+        {
+            AudioManager amanager=(AudioManager)getSystemService(Context.AUDIO_SERVICE);
+            //
+            //
+            amanager.setStreamMute(AudioManager.STREAM_NOTIFICATION, false);
+            amanager.setStreamMute(AudioManager.STREAM_ALARM, false);
+            amanager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+            amanager.setStreamMute(AudioManager.STREAM_RING, false);
+            amanager.setStreamMute(AudioManager.STREAM_SYSTEM, false);
+        }
+        else
+        {
+            AudioManager amanager=(AudioManager)getSystemService(Context.AUDIO_SERVICE);
+            amanager.setStreamMute(AudioManager.STREAM_NOTIFICATION, true);
+            amanager.setStreamMute(AudioManager.STREAM_ALARM, true);
+            amanager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            amanager.setStreamMute(AudioManager.STREAM_RING, true);
+            amanager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
+        }
+
     }
+
+
 }

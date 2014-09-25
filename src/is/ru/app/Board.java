@@ -1,5 +1,6 @@
 package is.ru.app;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.drawable.ShapeDrawable;
@@ -243,12 +244,11 @@ public class Board extends View {
                     }
                 }
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                //PlayActivity.moveSound();
+                PlayActivity.moveSound();
                // m_cellPath = new Cellpath();
                 if(isWin()){
                     PlayActivity.stopTimer();
-                    PlayActivity.winSound();
-                    System.out.println(mGlobals.selectedPuzzle);
+
                     mGlobals.fa.openToWrite();
                     mGlobals.fa.updateFlowFinished(
                             Integer.parseInt(mGlobals.puzzlePack.get(mGlobals.selectedPuzzle).getName()),
@@ -257,13 +257,22 @@ public class Board extends View {
                             true);
 
                     mGlobals.fa.close();
+                    Puzzle selectedPuzzle = mGlobals.puzzlePack.get(mGlobals.selectedPuzzle + 1);
+                    mGlobals.selectedPuzzle = mGlobals.puzzlePack.indexOf(selectedPuzzle);
+                    mGlobals.flowCoord = flowList(selectedPuzzle);
+                    mGlobals.mSize = selectedPuzzle.getSize();
 
-                    Toast.makeText(getContext(),"You Win!", Toast.LENGTH_SHORT).show();
+                    PlayActivity.onWin();
+
+
+                    //Toast.makeText(getContext(),"You Win!", Toast.LENGTH_SHORT).show();
                 }
             }
 
         return true;
     }
+
+
 
     public void setColor( int color ) {
         m_paintPath.setColor( color );
@@ -285,10 +294,8 @@ public class Board extends View {
     {
         //
         int index = colorList.indexOf(colorMeTimbers);
-
         int found = mGlobals.flowCoord.indexOf(co);
 
-        System.out.println("Index: " + index + " found/2: " + found/2);
         if(found == -1 || found/2 == index)
         {
 
@@ -344,5 +351,25 @@ public class Board extends View {
 
        return false;
 
+    }
+
+    private ArrayList<Coordinate> flowList(Puzzle selectedPuzzle){
+
+        ArrayList<Coordinate> flowList = new ArrayList<Coordinate>();
+
+        String[] test = selectedPuzzle.getFlows().split(", ");
+        ArrayList<String[]> split = new ArrayList<String[]>();
+        for(String temp:test) {
+            split.add(temp.substring(1).split("[ () ]"));
+        }
+
+        for(String[] tempString: split){
+            for(int i = 0; i < tempString.length; i = i + 2){
+                Coordinate flowCoord = new Coordinate(Integer.parseInt(tempString[i]), Integer.parseInt(tempString[i+1]));
+                flowList.add(flowCoord);
+            }
+        }
+
+        return flowList;
     }
 }

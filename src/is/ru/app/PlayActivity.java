@@ -1,6 +1,8 @@
 package is.ru.app;
 
-import android.app.Activity;
+import android.app.*;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -19,14 +21,41 @@ import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 /**
  * Created by olafurn on 9.9.2014.
  */
+
 public class PlayActivity extends Activity {
 
+
+    public static class winDialog extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Congratz you won!")
+                    .setPositiveButton("Next",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id)
+                                {
+                                    Context cont = getActivity();
+                                    startActivity(new Intent(cont, PlayActivity.class));
+                                };
+                            })
+                    .setNegativeButton("Main menu", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            Context cont = getActivity();
+                            startActivity(new Intent(cont, MainActivity.class));
+                        }
+                    });
+            return builder.create();
+        }
+    }
+    private static FragmentManager fragmentManager;
     //GLOBAL DOODA
     private Global mGlobals = Global.getInstance();
     //Sound
@@ -63,6 +92,8 @@ public class PlayActivity extends Activity {
 
         SharedPreferences settings = getSharedPreferences("ColorPref", MODE_PRIVATE);
 
+
+        fragmentManager = getFragmentManager();
         int color = settings.getInt("pathColor", Color.CYAN);
         Board board = (Board) findViewById(R.id.board);
         board.setColor(color);
@@ -118,6 +149,10 @@ public class PlayActivity extends Activity {
         float maxVolume = (float) audioManager
                 .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         volume = actualVolume / maxVolume;
+
+        //WIN DIALOG
+
+
     }
 
     public static void moveSound() {
@@ -130,21 +165,11 @@ public class PlayActivity extends Activity {
         }
 
     }
-    public static void winSound() {
-
-        if(loaded)
-        {
-            soundPool.play(soundID2, volume,volume, 1 ,0 , 1f);
-
-        }
-
-    }
 
     public static double getGameTime() {
 
         return gameTime;
     }
-
 
     public static void startTimer()
     {
@@ -160,8 +185,29 @@ public class PlayActivity extends Activity {
         myTimer.cancel();
         myTimer.purge();
     }
+    //CPU RAPIST
     private static void UpdateGUI() {
         gameTime += 1;
         handler.post(runner);
     }
+
+    public static void onWin()
+    {
+        if(loaded)
+        {
+            soundPool.play(soundID2, volume,volume, 1 ,0 , 1f);
+
+        }
+        DialogFragment win = new winDialog();
+
+        win.show(fragmentManager,"win");
+    }
+
+
+
+
+
+
+
+
 }
